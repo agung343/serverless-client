@@ -1,0 +1,7 @@
+node_modules
+
+.env
+.env.production
+
+pnpm-lock.yaml
+.yaml
