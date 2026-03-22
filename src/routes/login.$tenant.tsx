@@ -1,28 +1,24 @@
 import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ErrorComponentProps } from "@tanstack/react-router";
 import { authQueryOptions } from "../authQueryOption";
 import { login, getTenant } from "../auth";
+import { isApiError, ApiError } from "../lib/error";
 
 export const Route = createFileRoute("/login/$tenant")({
   loader: async ({ context: { queryClient }, params: { tenant } }) => {
-    await getTenant(tenant);
+    await getTenant(tenant)
     return queryClient.ensureQueryData(authQueryOptions());
   },
   component: LoginComponents,
   errorComponent: AuthErrorComponent,
 });
 
-export function AuthErrorComponent({ error }: ErrorComponentProps) {
+export function AuthErrorComponent({ error }: ErrorComponentProps) {  
   return (
     <main className="my-12 mx-auto w-md text-center">
       <h1 className="text-xl lg:text-3xl font-semibold text-red-500/50">
-        {error.cause === 404 ? "Tenant not found" : "Something went wrong"}
+        {error.cause === 404  ? "Tenant not found" : "Something went wrong"}
       </h1>
       <p className="text-sm lg:text-base mt-2">{error.message}</p>
     </main>
@@ -48,6 +44,9 @@ function LoginComponents() {
     return <Navigate to={`/$tenant/kasir`} params={{ tenant }} replace />;
   }
 
+  const error = loginMutation.error as any;
+  const fieldErrors = error?.detail;
+
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -71,7 +70,7 @@ function LoginComponents() {
       >
         <div className="space-y-2">
           <label htmlFor="username" className="font-light block">
-            Username
+            Username{" "}{fieldErrors?.username && <span className="text-red-500/50 text-sm font-light">{fieldErrors.username[0]}</span>}
           </label>
           <input
             type="text"
@@ -82,7 +81,7 @@ function LoginComponents() {
         </div>
         <div className="space-y-2">
           <label htmlFor="password" className="font-light block">
-            Password
+            Password{" "}{fieldErrors?.password && <span className="text-red-500/50 text-sm font-light">{fieldErrors.password[0]}</span>}
           </label>
           <input
             type="password"
@@ -97,9 +96,9 @@ function LoginComponents() {
         >
           {loginMutation.isPending ? "Logging In" : "Login"}
         </button>
-        {loginMutation.error && (
+        {error && (
           <span className="text-xs font-light text-red-500">
-            {loginMutation.error.message}
+            {error.message}
           </span>
         )}
       </form>

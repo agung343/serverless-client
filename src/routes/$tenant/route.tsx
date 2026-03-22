@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Outlet, Navigate } from "@tanstack/react-router";
-import UserNavigation from "../../components/user-navigation";
+import UserNavigation from "../-components/user-navigation";
 import { authQueryOptions } from "../../authQueryOption";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -21,6 +21,7 @@ function TenantLayout() {
 
   const username = session.user!.username
   const isAdmin = session.user!.role !== "STAFF"
+  
   return (
     <>
       <UserNavigation username={username} isAdmin={isAdmin} />

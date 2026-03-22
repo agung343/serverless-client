@@ -9,30 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
-import { Route as PostsRouteRouteImport } from './routes/posts.route'
 import { Route as staticRouteRouteImport } from './routes/(static)/route'
 import { Route as TenantRouteRouteImport } from './routes/$tenant/route'
-import { Route as PostsIndexRouteImport } from './routes/posts.index'
 import { Route as staticIndexRouteImport } from './routes/(static)/index'
-import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 import { Route as LoginTenantRouteImport } from './routes/login.$tenant'
-import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
 import { Route as staticServicesRouteImport } from './routes/(static)/services'
 import { Route as TenantKasirRouteImport } from './routes/$tenant/kasir'
-import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
-import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
-import { Route as TenantInventoryProductRouteImport } from './routes/$tenant/inventory.product'
+import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
+import { Route as TenantInventoryRouteRouteImport } from './routes/$tenant/inventory.route'
+import { Route as TenantInventoryProductsRouteImport } from './routes/$tenant/inventory.products'
 
-const PathlessLayoutRoute = PathlessLayoutRouteImport.update({
-  id: '/_pathlessLayout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PostsRouteRoute = PostsRouteRouteImport.update({
-  id: '/posts',
-  path: '/posts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const staticRouteRoute = staticRouteRouteImport.update({
   id: '/(static)',
   getParentRoute: () => rootRouteImport,
@@ -42,31 +28,16 @@ const TenantRouteRoute = TenantRouteRouteImport.update({
   path: '/$tenant',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PostsIndexRoute = PostsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PostsRouteRoute,
-} as any)
 const staticIndexRoute = staticIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => staticRouteRoute,
-} as any)
-const PostsPostIdRoute = PostsPostIdRouteImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => PostsRouteRoute,
 } as any)
 const LoginTenantRoute = LoginTenantRouteImport.update({
   id: '/login/$tenant',
   path: '/login/$tenant',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PathlessLayoutNestedLayoutRoute =
-  PathlessLayoutNestedLayoutRouteImport.update({
-    id: '/_nested-layout',
-    getParentRoute: () => PathlessLayoutRoute,
-  } as any)
 const staticServicesRoute = staticServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -77,134 +48,96 @@ const TenantKasirRoute = TenantKasirRouteImport.update({
   path: '/kasir',
   getParentRoute: () => TenantRouteRoute,
 } as any)
-const PathlessLayoutNestedLayoutRouteBRoute =
-  PathlessLayoutNestedLayoutRouteBRouteImport.update({
-    id: '/route-b',
-    path: '/route-b',
-    getParentRoute: () => PathlessLayoutNestedLayoutRoute,
-  } as any)
-const PathlessLayoutNestedLayoutRouteARoute =
-  PathlessLayoutNestedLayoutRouteARouteImport.update({
-    id: '/route-a',
-    path: '/route-a',
-    getParentRoute: () => PathlessLayoutNestedLayoutRoute,
-  } as any)
-const TenantInventoryProductRoute = TenantInventoryProductRouteImport.update({
-  id: '/inventory/product',
-  path: '/inventory/product',
+const TenantAdminRoute = TenantAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => TenantRouteRoute,
+} as any)
+const TenantInventoryRouteRoute = TenantInventoryRouteRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => TenantRouteRoute,
+} as any)
+const TenantInventoryProductsRoute = TenantInventoryProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => TenantInventoryRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/$tenant': typeof TenantRouteRouteWithChildren
-  '/posts': typeof PostsRouteRouteWithChildren
-  '/': typeof staticIndexRoute
+  '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
+  '/$tenant/admin': typeof TenantAdminRoute
   '/$tenant/kasir': typeof TenantKasirRoute
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/posts/': typeof PostsIndexRoute
-  '/$tenant/inventory/product': typeof TenantInventoryProductRoute
-  '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
-  '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/': typeof staticIndexRoute
+  '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
 export interface FileRoutesByTo {
   '/$tenant': typeof TenantRouteRouteWithChildren
-  '/': typeof staticIndexRoute
+  '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
+  '/$tenant/admin': typeof TenantAdminRoute
   '/$tenant/kasir': typeof TenantKasirRoute
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/posts': typeof PostsIndexRoute
-  '/$tenant/inventory/product': typeof TenantInventoryProductRoute
-  '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
-  '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/': typeof staticIndexRoute
+  '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/$tenant': typeof TenantRouteRouteWithChildren
   '/(static)': typeof staticRouteRouteWithChildren
-  '/posts': typeof PostsRouteRouteWithChildren
-  '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
+  '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
+  '/$tenant/admin': typeof TenantAdminRoute
   '/$tenant/kasir': typeof TenantKasirRoute
   '/(static)/services': typeof staticServicesRoute
-  '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/login/$tenant': typeof LoginTenantRoute
-  '/posts/$postId': typeof PostsPostIdRoute
   '/(static)/': typeof staticIndexRoute
-  '/posts/': typeof PostsIndexRoute
-  '/$tenant/inventory/product': typeof TenantInventoryProductRoute
-  '/_pathlessLayout/_nested-layout/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
-  '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/$tenant'
-    | '/posts'
-    | '/'
+    | '/$tenant/inventory'
+    | '/$tenant/admin'
     | '/$tenant/kasir'
     | '/services'
     | '/login/$tenant'
-    | '/posts/$postId'
-    | '/posts/'
-    | '/$tenant/inventory/product'
-    | '/route-a'
-    | '/route-b'
+    | '/'
+    | '/$tenant/inventory/products'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/$tenant'
-    | '/'
+    | '/$tenant/inventory'
+    | '/$tenant/admin'
     | '/$tenant/kasir'
     | '/services'
     | '/login/$tenant'
-    | '/posts/$postId'
-    | '/posts'
-    | '/$tenant/inventory/product'
-    | '/route-a'
-    | '/route-b'
+    | '/'
+    | '/$tenant/inventory/products'
   id:
     | '__root__'
     | '/$tenant'
     | '/(static)'
-    | '/posts'
-    | '/_pathlessLayout'
+    | '/$tenant/inventory'
+    | '/$tenant/admin'
     | '/$tenant/kasir'
     | '/(static)/services'
-    | '/_pathlessLayout/_nested-layout'
     | '/login/$tenant'
-    | '/posts/$postId'
     | '/(static)/'
-    | '/posts/'
-    | '/$tenant/inventory/product'
-    | '/_pathlessLayout/_nested-layout/route-a'
-    | '/_pathlessLayout/_nested-layout/route-b'
+    | '/$tenant/inventory/products'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   TenantRouteRoute: typeof TenantRouteRouteWithChildren
   staticRouteRoute: typeof staticRouteRouteWithChildren
-  PostsRouteRoute: typeof PostsRouteRouteWithChildren
-  PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
   LoginTenantRoute: typeof LoginTenantRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_pathlessLayout': {
-      id: '/_pathlessLayout'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof PathlessLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/posts': {
-      id: '/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof PostsRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(static)': {
       id: '/(static)'
       path: ''
@@ -219,13 +152,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/posts/': {
-      id: '/posts/'
-      path: '/'
-      fullPath: '/posts/'
-      preLoaderRoute: typeof PostsIndexRouteImport
-      parentRoute: typeof PostsRouteRoute
-    }
     '/(static)/': {
       id: '/(static)/'
       path: '/'
@@ -233,26 +159,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof staticIndexRouteImport
       parentRoute: typeof staticRouteRoute
     }
-    '/posts/$postId': {
-      id: '/posts/$postId'
-      path: '/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdRouteImport
-      parentRoute: typeof PostsRouteRoute
-    }
     '/login/$tenant': {
       id: '/login/$tenant'
       path: '/login/$tenant'
       fullPath: '/login/$tenant'
       preLoaderRoute: typeof LoginTenantRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_pathlessLayout/_nested-layout': {
-      id: '/_pathlessLayout/_nested-layout'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof PathlessLayoutNestedLayoutRouteImport
-      parentRoute: typeof PathlessLayoutRoute
     }
     '/(static)/services': {
       id: '/(static)/services'
@@ -268,38 +180,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantKasirRouteImport
       parentRoute: typeof TenantRouteRoute
     }
-    '/_pathlessLayout/_nested-layout/route-b': {
-      id: '/_pathlessLayout/_nested-layout/route-b'
-      path: '/route-b'
-      fullPath: '/route-b'
-      preLoaderRoute: typeof PathlessLayoutNestedLayoutRouteBRouteImport
-      parentRoute: typeof PathlessLayoutNestedLayoutRoute
-    }
-    '/_pathlessLayout/_nested-layout/route-a': {
-      id: '/_pathlessLayout/_nested-layout/route-a'
-      path: '/route-a'
-      fullPath: '/route-a'
-      preLoaderRoute: typeof PathlessLayoutNestedLayoutRouteARouteImport
-      parentRoute: typeof PathlessLayoutNestedLayoutRoute
-    }
-    '/$tenant/inventory/product': {
-      id: '/$tenant/inventory/product'
-      path: '/inventory/product'
-      fullPath: '/$tenant/inventory/product'
-      preLoaderRoute: typeof TenantInventoryProductRouteImport
+    '/$tenant/admin': {
+      id: '/$tenant/admin'
+      path: '/admin'
+      fullPath: '/$tenant/admin'
+      preLoaderRoute: typeof TenantAdminRouteImport
       parentRoute: typeof TenantRouteRoute
+    }
+    '/$tenant/inventory': {
+      id: '/$tenant/inventory'
+      path: '/inventory'
+      fullPath: '/$tenant/inventory'
+      preLoaderRoute: typeof TenantInventoryRouteRouteImport
+      parentRoute: typeof TenantRouteRoute
+    }
+    '/$tenant/inventory/products': {
+      id: '/$tenant/inventory/products'
+      path: '/products'
+      fullPath: '/$tenant/inventory/products'
+      preLoaderRoute: typeof TenantInventoryProductsRouteImport
+      parentRoute: typeof TenantInventoryRouteRoute
     }
   }
 }
 
+interface TenantInventoryRouteRouteChildren {
+  TenantInventoryProductsRoute: typeof TenantInventoryProductsRoute
+}
+
+const TenantInventoryRouteRouteChildren: TenantInventoryRouteRouteChildren = {
+  TenantInventoryProductsRoute: TenantInventoryProductsRoute,
+}
+
+const TenantInventoryRouteRouteWithChildren =
+  TenantInventoryRouteRoute._addFileChildren(TenantInventoryRouteRouteChildren)
+
 interface TenantRouteRouteChildren {
+  TenantInventoryRouteRoute: typeof TenantInventoryRouteRouteWithChildren
+  TenantAdminRoute: typeof TenantAdminRoute
   TenantKasirRoute: typeof TenantKasirRoute
-  TenantInventoryProductRoute: typeof TenantInventoryProductRoute
 }
 
 const TenantRouteRouteChildren: TenantRouteRouteChildren = {
+  TenantInventoryRouteRoute: TenantInventoryRouteRouteWithChildren,
+  TenantAdminRoute: TenantAdminRoute,
   TenantKasirRoute: TenantKasirRoute,
-  TenantInventoryProductRoute: TenantInventoryProductRoute,
 }
 
 const TenantRouteRouteWithChildren = TenantRouteRoute._addFileChildren(
@@ -320,55 +245,9 @@ const staticRouteRouteWithChildren = staticRouteRoute._addFileChildren(
   staticRouteRouteChildren,
 )
 
-interface PostsRouteRouteChildren {
-  PostsPostIdRoute: typeof PostsPostIdRoute
-  PostsIndexRoute: typeof PostsIndexRoute
-}
-
-const PostsRouteRouteChildren: PostsRouteRouteChildren = {
-  PostsPostIdRoute: PostsPostIdRoute,
-  PostsIndexRoute: PostsIndexRoute,
-}
-
-const PostsRouteRouteWithChildren = PostsRouteRoute._addFileChildren(
-  PostsRouteRouteChildren,
-)
-
-interface PathlessLayoutNestedLayoutRouteChildren {
-  PathlessLayoutNestedLayoutRouteARoute: typeof PathlessLayoutNestedLayoutRouteARoute
-  PathlessLayoutNestedLayoutRouteBRoute: typeof PathlessLayoutNestedLayoutRouteBRoute
-}
-
-const PathlessLayoutNestedLayoutRouteChildren: PathlessLayoutNestedLayoutRouteChildren =
-  {
-    PathlessLayoutNestedLayoutRouteARoute:
-      PathlessLayoutNestedLayoutRouteARoute,
-    PathlessLayoutNestedLayoutRouteBRoute:
-      PathlessLayoutNestedLayoutRouteBRoute,
-  }
-
-const PathlessLayoutNestedLayoutRouteWithChildren =
-  PathlessLayoutNestedLayoutRoute._addFileChildren(
-    PathlessLayoutNestedLayoutRouteChildren,
-  )
-
-interface PathlessLayoutRouteChildren {
-  PathlessLayoutNestedLayoutRoute: typeof PathlessLayoutNestedLayoutRouteWithChildren
-}
-
-const PathlessLayoutRouteChildren: PathlessLayoutRouteChildren = {
-  PathlessLayoutNestedLayoutRoute: PathlessLayoutNestedLayoutRouteWithChildren,
-}
-
-const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
-  PathlessLayoutRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   TenantRouteRoute: TenantRouteRouteWithChildren,
   staticRouteRoute: staticRouteRouteWithChildren,
-  PostsRouteRoute: PostsRouteRouteWithChildren,
-  PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
   LoginTenantRoute: LoginTenantRoute,
 }
 export const routeTree = rootRouteImport
