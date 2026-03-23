@@ -1,9 +1,8 @@
 import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ErrorComponentProps } from "@tanstack/react-router";
-import { authQueryOptions } from "../authQueryOption";
-import { login, getTenant } from "../auth";
-import { isApiError, ApiError } from "../lib/error";
+import { authQueryOptions } from "~/authQueryOption";
+import { login, getTenant } from "~/auth";
 
 export const Route = createFileRoute("/login/$tenant")({
   loader: async ({ context: { queryClient }, params: { tenant } }) => {

@@ -15,9 +15,18 @@ function InventoryRoot() {
           params={{ tenant }}
           className="font-light"
           activeProps={{ className: "font-bold text-blue-500 underline" }}
-          activeOptions={{exact: true}}
+          activeOptions={{ exact: true }}
         >
           Products
+        </Link>
+        <Link
+          to="/$tenant/inventory/create-product"
+          params={{ tenant }}
+          className="font-ligth"
+          activeProps={{ className: "font-bold text-blue-500 underline" }}
+          activeOptions={{ exact: true }}
+        >
+          Create Product
         </Link>
       </nav>
       <Outlet />

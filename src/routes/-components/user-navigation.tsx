@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import NavDropDown from "./nav-dropdown";
-import { logout } from "../../auth";
+import { logout } from "~/auth";
 
 export default function UserNavigation({
   username,
@@ -44,6 +44,7 @@ export default function UserNavigation({
             label="Inventory"
             items={[
               { label: "Products", to: `/${tenant}/inventory/products` },
+              { label: "Create Product", to: `/${tenant}/inventory/create-product`},
               { label: "Return", to: `/${tenant}/inventory/return` },
             ]}
           />

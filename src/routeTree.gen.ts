@@ -18,6 +18,7 @@ import { Route as TenantKasirRouteImport } from './routes/$tenant/kasir'
 import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
 import { Route as TenantInventoryRouteRouteImport } from './routes/$tenant/inventory.route'
 import { Route as TenantInventoryProductsRouteImport } from './routes/$tenant/inventory.products'
+import { Route as TenantInventoryCreateProductRouteImport } from './routes/$tenant/inventory.create-product'
 
 const staticRouteRoute = staticRouteRouteImport.update({
   id: '/(static)',
@@ -63,6 +64,12 @@ const TenantInventoryProductsRoute = TenantInventoryProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => TenantInventoryRouteRoute,
 } as any)
+const TenantInventoryCreateProductRoute =
+  TenantInventoryCreateProductRouteImport.update({
+    id: '/create-product',
+    path: '/create-product',
+    getParentRoute: () => TenantInventoryRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/$tenant': typeof TenantRouteRouteWithChildren
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/': typeof staticIndexRoute
+  '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/': typeof staticIndexRoute
+  '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
 export interface FileRoutesById {
@@ -94,6 +103,7 @@ export interface FileRoutesById {
   '/(static)/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/(static)/': typeof staticIndexRoute
+  '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/login/$tenant'
     | '/'
+    | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/login/$tenant'
     | '/'
+    | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
   id:
     | '__root__'
@@ -127,6 +139,7 @@ export interface FileRouteTypes {
     | '/(static)/services'
     | '/login/$tenant'
     | '/(static)/'
+    | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
   fileRoutesById: FileRoutesById
 }
@@ -201,14 +214,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantInventoryProductsRouteImport
       parentRoute: typeof TenantInventoryRouteRoute
     }
+    '/$tenant/inventory/create-product': {
+      id: '/$tenant/inventory/create-product'
+      path: '/create-product'
+      fullPath: '/$tenant/inventory/create-product'
+      preLoaderRoute: typeof TenantInventoryCreateProductRouteImport
+      parentRoute: typeof TenantInventoryRouteRoute
+    }
   }
 }
 
 interface TenantInventoryRouteRouteChildren {
+  TenantInventoryCreateProductRoute: typeof TenantInventoryCreateProductRoute
   TenantInventoryProductsRoute: typeof TenantInventoryProductsRoute
 }
 
 const TenantInventoryRouteRouteChildren: TenantInventoryRouteRouteChildren = {
+  TenantInventoryCreateProductRoute: TenantInventoryCreateProductRoute,
   TenantInventoryProductsRoute: TenantInventoryProductsRoute,
 }
 

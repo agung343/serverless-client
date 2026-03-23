@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Outlet, Navigate } from "@tanstack/react-router";
 import UserNavigation from "../-components/user-navigation";
-import { authQueryOptions } from "../../authQueryOption";
+import { authQueryOptions } from "~/authQueryOption";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/$tenant")({
@@ -15,13 +15,13 @@ function TenantLayout() {
   const tenant = Route.useParams().tenant;
   const { data: session } = useSuspenseQuery(authQueryOptions());
 
-  if (!session) {
+  if (!session || !session.user) {
     return <Navigate to={`/login/$tenant`} params={{ tenant }} replace />;
   }
 
-  const username = session.user!.username
-  const isAdmin = session.user!.role !== "STAFF"
-  
+  const username = session.user!.username;
+  const isAdmin = session.user!.role !== "STAFF";
+
   return (
     <>
       <UserNavigation username={username} isAdmin={isAdmin} />

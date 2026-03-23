@@ -32,6 +32,9 @@ export const getTenant = async (tenant: string) => {
   } catch (error: any) {
     const message = error.data?.message || "Something went wrong";
     const status = error.status || 500;
+    if (status === 404) {
+      throw new Error("Tenant not found")
+    }
     throw new Error(message, {cause: status})
   }
 };

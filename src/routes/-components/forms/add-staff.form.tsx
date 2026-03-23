@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNewUser } from "../../../users";
-import { ApiError } from "../../../lib/error";
+import { ApiError } from "~/lib/error";
 
 interface Props {
   onSuccess: () => void;

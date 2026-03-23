@@ -36,9 +36,7 @@ export const getUsers = async () => {
     const res = await api.get<Users>("/users");
     return res.data;
   } catch (error: any) {
-    const message = error.data?.message || "Something went wrong";
-    const status = error.status || 500;
-    throw new Error(message, { cause: status });
+    throw toApiError(error)
   }
 };
 
@@ -56,11 +54,7 @@ export const updateUser = async (payload: UpdateUserPayload) => {
     const res = await api.put(`/users/${payload.userId}`, payload);
     return res.data;
   } catch (error: any) {
-    const message = error.data?.message || "Something went wrong";
-    const status = error.status || 500;
-    const details = error.data?.details;
-
-    throw { message, status, details };
+    throw toApiError(error)
   }
 };
 
