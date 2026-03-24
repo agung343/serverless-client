@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNewCategory } from "~/category";
-import { ApiError } from "~/lib/error";
+import { CreateNewCategorySchema } from "~/schema/product.schema";
 
 export default function AddCategoryForm({
   onSuccess,
 }: {
   onSuccess: () => void;
 }) {
+  const [fieldError, setFieldError] = useState<Record<string, string[]>>({});
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -17,28 +19,37 @@ export default function AddCategoryForm({
     },
   });
 
-  const fieldError = mutation.error instanceof ApiError ? mutation.error : null;
+  function handleSubmit(e: React.SubmitEvent) {
+    e.preventDefault();
 
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault()
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
 
-    const formData = new FormData(e.currentTarget)
-
-    mutation.mutate({
-        name: formData.get("name") as string
-    })
+    const result = CreateNewCategorySchema.safeParse({
+      name: formData.get("name"),
+    });
+    if (!result.success) {
+      setFieldError(result.error.flatten().fieldErrors);
+      return;
+    }
+    setFieldError({});
+    mutation.mutate(result.data);
   }
 
   return (
     <>
-      <h2 className="mt-4 text-lg lg:text-xl font-semibold">Add Category:</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="mt-4 text-lg lg:text-xl text-center font-semibold dark:text-stone-800">Add Category:</h2>
+      <form onSubmit={handleSubmit} className="dark:text-stone-800">
+        {mutation.error?.message && (
+          <p className="text-center text-sm text-red-500 font-light">
+            The name already existed.
+          </p>
+        )}
         <div className="flex flex-col gap-2">
           <label htmlFor="name">
             Name{" "}
-            {fieldError?.getFieldErrors("name") ? (
+            {fieldError.name ? (
               <span className="text-sm font-light text-red-500/50">
-                {fieldError.getFieldErrors("name")}
+                {fieldError.name[0]}
               </span>
             ) : (
               <span className="text-sm font-light text-red-500/50">
@@ -66,7 +77,7 @@ export default function AddCategoryForm({
             disabled={mutation.isPending}
             className="bg-green-500/50 py-2 px-4 rounded-md hover:cursor-pointer active:bg-green-500"
           >
-            {mutation.isPending ?  "Creating..." : "+ Create"}
+            {mutation.isPending ? "Creating..." : "+ Create"}
           </button>
         </div>
       </form>

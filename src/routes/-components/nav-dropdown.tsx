@@ -48,7 +48,6 @@ export default function NavDropDown({
                   activeProps={{
                     className: "font-bold",
                   }}
-                  activeOptions={{exact: true}}
                   className="block px-4 py-2 hover:bg-gray-200 font-light text-sm lg:text-base"
                   onClick={() => setIsOpen(false)}
                 >

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   useMutation,
   useQueryClient,
@@ -9,6 +9,7 @@ import { categoriesQueryOptions } from "~/categoryQueryOption";
 import { createNewProduct } from "~/product";
 import Modal from "../-components/modals";
 import AddCategoryForm from "../-components/forms/add-category.form";
+import { CreateProductSchema } from "~/schema/product.schema";
 import { ApiError } from "~/lib/error";
 
 export const Route = createFileRoute("/$tenant/inventory/create-product")({
@@ -19,9 +20,10 @@ export const Route = createFileRoute("/$tenant/inventory/create-product")({
 });
 
 function CreateProduct() {
-  const { tenant } = Route.useParams();
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate({from: "/$tenant/inventory/create-product"})
 
   function closeModal() {
     setIsOpen(false);
@@ -38,25 +40,33 @@ function CreateProduct() {
     mutationFn: createNewProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      navigate({to: "/$tenant/inventory/products"})
     },
+    onError: (error) => {
+      console.error("Something went wrong", error)
+    }
   });
-
-  const fieldErrors =
-    mutation.error instanceof ApiError ? mutation.error : null;
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const payload = new FormData(e.currentTarget);
 
-    mutation.mutate({
+    const result = CreateProductSchema.safeParse({
       name: payload.get("name") as string,
       code: payload.get("code") as string,
       categoryId: payload.get("category") as string,
       price: Number(payload.get("price")),
       cost: Number(payload.get("cost")),
       description: payload.get("description")?.toString(),
-    });
+    })
+    if (!result.success) {
+      setFieldErrors(result.error.flatten().fieldErrors)
+      return;
+    }
+    
+    setFieldErrors({})
+    mutation.mutate(result.data)
   }
 
   return (
@@ -65,6 +75,11 @@ function CreateProduct() {
         onSubmit={handleSubmit}
         className="w-1/2 mx-auto border p-4 rounded-md shadow-gray-600/50 shadow-sm my-4 text-sm lg:text-base"
       >
+        {mutation.error?.message && (
+          <p className="text-sm text-red-500 font-light text-center">
+            Product name or code already existed.
+          </p>
+        )}
         <h1 className="text-center text-xl lg:text-2xl font-bold">
           Create New Product
         </h1>
@@ -72,9 +87,9 @@ function CreateProduct() {
           <div className="flex flex-col gap-2">
             <label htmlFor="name">
               Name{" "}
-              {fieldErrors?.getFieldErrors("name") ? (
+              {fieldErrors.name ? (
                 <span className="text-sm font-light text-red-500/50">
-                  {fieldErrors.getFieldErrors("name")}
+                  {fieldErrors.name[0]}
                 </span>
               ) : (
                 <span className="text-sm font-light text-red-500/50">
@@ -91,9 +106,9 @@ function CreateProduct() {
           <div className="flex flex-col gap-2">
             <label htmlFor="code">
               Code{" "}
-              {fieldErrors?.getFieldErrors("code") ? (
+              {fieldErrors.code ? (
                 <span className="text-sm font-light text-red-500/50">
-                  {fieldErrors.getFieldErrors("code")}
+                  {fieldErrors.code[0]}
                 </span>
               ) : (
                 <span className="text-sm font-light text-red-500/50">
@@ -110,9 +125,9 @@ function CreateProduct() {
           <div className="flex flex-col gap-2">
             <label htmlFor="category">
               Category{" "}
-              {fieldErrors?.getFieldErrors("categoryId") ? (
+              {fieldErrors.categoryId ? (
                 <span className="text-sm font-light text-red-500/50">
-                  {fieldErrors.getFieldErrors("categoryId")}
+                  {fieldErrors.categoryId[0]}
                 </span>
               ) : (
                 <span className="text-sm font-light text-red-500/50">

@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { api } from "./client";
 import { ApiError } from "./lib/error";
+import type { CreateProductPayload, UpdateProductPayload, ProductQuery } from "./schema/product.schema";
 
 export type Product = {
     id: string
@@ -21,8 +21,8 @@ export type ProductsReturn = {
         limit: number
         total: number
         totalPages: number
-        hasNext: boolean
-        hasPrev: boolean
+        hasNextPage: boolean
+        hasPrevPage: boolean
     }
 }
 
@@ -36,22 +36,17 @@ export type ProductsForCashierReturn = {
     }[]
 }
 
-export type CreateProductPayload = {
+export type ProductReturn = {
     name: string
     code: string
-    categoryId: string
+    category: {
+        id: string
+        name: string
+    }
     price: number
     cost: number
-    description?: string
+    description?: string    
 }
-
-export const PaginationProductSchema = z.object({
-    search: z.string().optional(),
-    page: z.coerce.number().int().positive().default(1),
-    limit: z.coerce.number().int().positive().max(100).default(25)
-})
-
-export type ProductQuery = z.infer<typeof PaginationProductSchema>
 
 const toApiError = (error:any): ApiError => {
     const message = error.data?.message || "Something went wrong";
@@ -81,7 +76,24 @@ export const getAllProducts = async (params: ProductQuery) => {
 export const createNewProduct = async (payload: CreateProductPayload) => {
     try {
         const res = await api.post("/inventory/new-product", payload);
-        console.log(res.data)
+        return res.data
+    } catch (error) {
+        throw toApiError(error)
+    }
+}
+
+export const getProductDetail = async (productId: string) => {
+    try {
+        const res = await api.get<ProductReturn>(`/inventory/product/${productId}`)
+        return res.data
+    } catch (error) {
+        throw toApiError(error)
+    }
+}
+
+export const updateProduct = async (payload: UpdateProductPayload, productId: string) => {
+    try {
+        const res = await api.patch(`/inventory/edit/${productId}`, payload)
         return res.data
     } catch (error) {
         throw toApiError(error)

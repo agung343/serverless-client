@@ -19,6 +19,7 @@ import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
 import { Route as TenantInventoryRouteRouteImport } from './routes/$tenant/inventory.route'
 import { Route as TenantInventoryProductsRouteImport } from './routes/$tenant/inventory.products'
 import { Route as TenantInventoryCreateProductRouteImport } from './routes/$tenant/inventory.create-product'
+import { Route as TenantInventoryCategoryRouteImport } from './routes/$tenant/inventory.category'
 
 const staticRouteRoute = staticRouteRouteImport.update({
   id: '/(static)',
@@ -70,6 +71,11 @@ const TenantInventoryCreateProductRoute =
     path: '/create-product',
     getParentRoute: () => TenantInventoryRouteRoute,
   } as any)
+const TenantInventoryCategoryRoute = TenantInventoryCategoryRouteImport.update({
+  id: '/category',
+  path: '/category',
+  getParentRoute: () => TenantInventoryRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/$tenant': typeof TenantRouteRouteWithChildren
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/': typeof staticIndexRoute
+  '/$tenant/inventory/category': typeof TenantInventoryCategoryRoute
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/': typeof staticIndexRoute
+  '/$tenant/inventory/category': typeof TenantInventoryCategoryRoute
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/(static)/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/(static)/': typeof staticIndexRoute
+  '/$tenant/inventory/category': typeof TenantInventoryCategoryRoute
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
 }
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/login/$tenant'
     | '/'
+    | '/$tenant/inventory/category'
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
   fileRoutesByTo: FileRoutesByTo
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/login/$tenant'
     | '/'
+    | '/$tenant/inventory/category'
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
   id:
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/(static)/services'
     | '/login/$tenant'
     | '/(static)/'
+    | '/$tenant/inventory/category'
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
   fileRoutesById: FileRoutesById
@@ -221,15 +233,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantInventoryCreateProductRouteImport
       parentRoute: typeof TenantInventoryRouteRoute
     }
+    '/$tenant/inventory/category': {
+      id: '/$tenant/inventory/category'
+      path: '/category'
+      fullPath: '/$tenant/inventory/category'
+      preLoaderRoute: typeof TenantInventoryCategoryRouteImport
+      parentRoute: typeof TenantInventoryRouteRoute
+    }
   }
 }
 
 interface TenantInventoryRouteRouteChildren {
+  TenantInventoryCategoryRoute: typeof TenantInventoryCategoryRoute
   TenantInventoryCreateProductRoute: typeof TenantInventoryCreateProductRoute
   TenantInventoryProductsRoute: typeof TenantInventoryProductsRoute
 }
 
 const TenantInventoryRouteRouteChildren: TenantInventoryRouteRouteChildren = {
+  TenantInventoryCategoryRoute: TenantInventoryCategoryRoute,
   TenantInventoryCreateProductRoute: TenantInventoryCreateProductRoute,
   TenantInventoryProductsRoute: TenantInventoryProductsRoute,
 }
