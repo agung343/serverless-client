@@ -1,5 +1,8 @@
+import { useState } from "react";
+import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateUser, type User } from "../../../users";
+import { updateUser, type User } from "~/api/users";
+import { UpdateUserSchema } from "~/schema/user.schema";
 
 interface Props {
   onSuccess: () => void;
@@ -7,6 +10,7 @@ interface Props {
 }
 
 export default function EditStaffForm({ onSuccess, user }: Props) {
+  const [fieldError, setFieldError] = useState<Record<string, string[]>>({});
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -17,20 +21,25 @@ export default function EditStaffForm({ onSuccess, user }: Props) {
     },
   });
 
-  const errorData = mutation.error as any;
-  const fieldError = errorData?.details || {};
-
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
 
-    mutation.mutate({
+    const result = UpdateUserSchema.safeParse({
       userId: user.id,
-      username: formData.get("username") as string,
-      password: formData.get("password") as string,
-      role: formData.get("role") as "ADMIN" | "STAFF",
+      username: formData.get("username"),
+      password: formData.get("password"),
+      role: formData.get("role")
     });
+    if (!result.success) {
+      const flatten = z.flattenError(result.error);
+      setFieldError(flatten.fieldErrors);
+      return;
+    }
+    setFieldError({});
+
+    mutation.mutate(result.data);
   }
 
   return (
@@ -40,9 +49,9 @@ export default function EditStaffForm({ onSuccess, user }: Props) {
         <div className="flex flex-col justify-center">
           <label htmlFor="username">
             Username{" "}
-            {fieldError.username ? (
+            {fieldError?.username ? (
               <span className="text-red-500/50 text-sm font-light">
-                {fieldError.username}
+                {fieldError.username[0]}
               </span>
             ) : (
               <span className="text-red-500/50 text-sm font-light">
@@ -61,9 +70,9 @@ export default function EditStaffForm({ onSuccess, user }: Props) {
         <div className="flex flex-col justify-center">
           <label htmlFor="password">
             Password{" "}
-            {fieldError.pasword ? (
+            {fieldError?.pasword ? (
               <span className="text-red-500/50 text-sm font-light">
-                {fieldError.password}
+                {fieldError.password[0]}
               </span>
             ) : (
               <span className="text-red-500/50 text-sm font-light">
@@ -92,7 +101,7 @@ export default function EditStaffForm({ onSuccess, user }: Props) {
         </div>
         {mutation.isError && !Object.keys(fieldError).length && (
           <div className="p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm">
-            {errorData.message}
+            {mutation.error.message}
           </div>
         )}
 

@@ -1,18 +1,6 @@
 import { api } from "./client";
-import { ApiError } from "./lib/error";
-
-export type CreateUserPayload = {
-  username: string;
-  password: string;
-  role: "ADMIN" | "STAFF";
-};
-
-export type UpdateUserPayload = {
-  userId: string;
-  username?: string;
-  password?: string;
-  role?: "ADMIN" | "STAFF";
-};
+import { ApiError } from "../lib/error";
+import { type CreateUserPayload, UpdateUserPayload } from "~/schema/user.schema";
 
 export type User = {
   id: string;
@@ -42,7 +30,7 @@ export const getUsers = async () => {
 
 export const createNewUser = async (payload: CreateUserPayload) => {
   try {
-    const res = await api.post("/users/create-new", payload);
+    const res = await api.post("/users", payload);
     return res.data;
   } catch (error: any) {
     throw toApiError(error)

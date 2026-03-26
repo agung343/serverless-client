@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNewCategory } from "~/category";
+import { createNewCategory } from "~/api/category";
 import { CreateNewCategorySchema } from "~/schema/product.schema";
 
 export default function AddCategoryForm({

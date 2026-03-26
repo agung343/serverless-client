@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNewUser } from "../../../users";
+import { z } from "zod";
+import { createNewUser } from "~/api/users";
 import { ApiError } from "~/lib/error";
+import { CreateUserSchema } from "~/schema/user.schema";
 
 interface Props {
   onSuccess: () => void;
 }
 
 export default function AddStaffForm({ onSuccess }: Props) {
+  const [fieldError, setFieldError] = useState<Record<string, string[]>>({});  
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -19,19 +23,25 @@ export default function AddStaffForm({ onSuccess }: Props) {
 
   const errorData = mutation.error as any;
   console.log(errorData);
-  // const fieldError = errorData?.details || {};
-  const fieldError = mutation.error instanceof ApiError ? mutation.error : null;
-
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  
+  function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-
-    mutation.mutate({
-      username: formData.get("username") as string,
-      password: formData.get("password") as string,
-      role: formData.get("role") as "ADMIN" | "STAFF",
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    
+    const result = CreateUserSchema.safeParse({ 
+      username: formData.get("username"),
+      password: formData.get("password"),
+      role: formData.get("role")
     });
+    if (!result.success) {
+      const flatten = z.flattenError(result.error);
+      setFieldError(flatten.fieldErrors);
+      return;
+    }
+    setFieldError({});
+
+    mutation.mutate(result.data);
   }
 
   return (
@@ -41,9 +51,9 @@ export default function AddStaffForm({ onSuccess }: Props) {
         <div className="flex flex-col justify-center">
           <label htmlFor="username">
             Username{" "}
-            {fieldError?.getFieldErrors("username") && (
+            {fieldError?.username && (
               <span className="text-red-500/50 text-sm font-light">
-                {fieldError.getFieldErrors("username")}
+                {fieldError.username[0]}
               </span>
             )}
           </label>
@@ -57,9 +67,9 @@ export default function AddStaffForm({ onSuccess }: Props) {
         <div className="flex flex-col justify-center">
           <label htmlFor="password">
             Password{" "}
-            {fieldError?.getFieldErrors("password") && (
+            {fieldError?.password && (
               <span className="text-red-500/50 text-sm font-light">
-                {fieldError.getFieldErrors("password")}
+                {fieldError.password[0]}
               </span>
             )}
           </label>

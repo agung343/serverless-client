@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import NavDropDown from "./nav-dropdown";
-import { logout } from "~/auth";
+import { logout } from "~/api/auth";
 
 export default function UserNavigation({
   username,

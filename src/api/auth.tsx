@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "./lib/error";
+import { ApiError } from "../lib/error";
 
 export class AuthError extends Error {}
 

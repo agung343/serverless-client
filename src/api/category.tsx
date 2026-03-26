@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "./lib/error";
+import { ApiError } from "../lib/error";
 
 export type CategoryReturn = {
   categories: {
@@ -32,7 +32,7 @@ export const getCategories = async () => {
 
 export const createNewCategory = async (payload: CreateCategoryPayload) => {
   try {
-    const res = await api.post("/inventory/new-category", payload);
+    const res = await api.post("/inventory/category", payload);
     return res.data;
   } catch (error: any) {
     throw toApiError(error);

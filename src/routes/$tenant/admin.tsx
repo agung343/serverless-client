@@ -6,7 +6,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { usersQueryOptions } from "../../usersQueryOptions";
-import { deleteUser, type User } from "../../users";
+import { deleteUser, type User } from "../../api/users";
 import Modal from "../-components/modals";
 import AddStaffForm from "../-components/forms/add-staff.form";
 import EditStaffForm from "../-components/forms/edit-staff.form";

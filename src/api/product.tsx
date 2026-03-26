@@ -1,6 +1,6 @@
 import { api } from "./client";
-import { ApiError } from "./lib/error";
-import type { CreateProductPayload, UpdateProductPayload, ProductQuery } from "./schema/product.schema";
+import { ApiError } from "../lib/error";
+import type { CreateProductPayload, UpdateProductPayload, ProductQuery } from "../schema/product.schema";
 
 export type Product = {
     id: string
@@ -76,7 +76,7 @@ export const getAllProducts = async (params: ProductQuery) => {
 
 export const createNewProduct = async (payload: CreateProductPayload) => {
     try {
-        const res = await api.post("/inventory/new-product", payload);
+        const res = await api.post("/inventory/product", payload);
         return res.data
     } catch (error) {
         throw toApiError(error)
@@ -94,7 +94,7 @@ export const getProductDetail = async (productId: string) => {
 
 export const updateProduct = async (payload: UpdateProductPayload, productId: string) => {
     try {
-        const res = await api.patch(`/inventory/edit/${productId}`, payload)
+        const res = await api.patch(`/inventory/${productId}`, payload)
         return res.data
     } catch (error) {
         throw toApiError(error)

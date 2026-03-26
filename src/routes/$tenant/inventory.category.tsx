@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { categoriesQueryOptions } from "~/categoryQueryOption";
-import { createNewCategory } from "~/category";
+import { createNewCategory } from "~/api/category";
 import { CreateNewCategorySchema } from "~/schema/product.schema";
 
 export const Route = createFileRoute("/$tenant/inventory/category")({
