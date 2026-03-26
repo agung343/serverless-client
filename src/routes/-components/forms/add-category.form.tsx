@@ -45,7 +45,7 @@ export default function AddCategoryForm({
           </p>
         )}
         <div className="flex flex-col gap-2">
-          <label htmlFor="name">
+          <label htmlFor="name" className="font-semibold">
             Name{" "}
             {fieldError.name ? (
               <span className="text-sm font-light text-red-500/50">

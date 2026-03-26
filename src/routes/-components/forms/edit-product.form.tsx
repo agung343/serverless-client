@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { productDetailsQueryOptions } from "~/productQueryOptions";
 import { categoriesQueryOptions } from "~/categoryQueryOption";
-import { updateProduct} from "~/product";
+import { updateProduct } from "~/product";
 import { type UpdateProductPayload } from "~/schema/product.schema";
 
 interface Props {
@@ -28,7 +28,9 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
       updateProduct(payload, productId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product-detail", productId] });
+      queryClient.invalidateQueries({
+        queryKey: ["product-detail", productId],
+      });
       onSuccess();
     },
   });
@@ -56,7 +58,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
       </h1>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name" className="font-semibold text-gray-800/70">Name</label>
           <input
             type="text"
             name="name"
@@ -65,7 +67,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="code">Code</label>
+          <label htmlFor="code" className="font-semibold text-gray-800/70">Code</label>
           <input
             type="text"
             name="code"
@@ -74,7 +76,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="category">Category</label>
+          <label htmlFor="category" className="font-semibold text-gray-800/70">Category</label>
           <select
             name="category"
             className="py-2 px-4 rounded-md border border-gray-500"
@@ -87,8 +89,24 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
             ))}
           </select>
         </div>
+        <div className="flex items-center gap-2">
+          <label htmlFor="unit" className="font-semibold text-gray-800/70">Unit</label>
+          <select
+            name="unit"
+            className="py-2 px-4 rounded-md border border-gray-500"
+          >
+            <option value="">Select unit</option>
+            <option value="1">Piece</option>
+            <option value="2">Kg</option>
+            <option value="4">Liter</option>
+            <option value="5">Meter</option>
+            <option value="6">Box</option>
+            <option value="7">Doz</option>
+            <option value="8">Pack</option>
+          </select>
+        </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="price">Price</label>
+          <label htmlFor="price" className="font-semibold">Price</label>
           <input
             type="text"
             name="price"
@@ -97,7 +115,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="cost">Cost</label>
+          <label htmlFor="cost" className="font-semibold">Cost</label>
           <input
             type="text"
             name="cost"
@@ -106,7 +124,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>{" "}
         <div className="flex flex-col gap-2">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description" className="font-semibold">Description</label>
           <textarea
             rows={2}
             name="description"

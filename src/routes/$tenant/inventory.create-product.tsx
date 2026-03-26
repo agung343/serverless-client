@@ -10,7 +10,7 @@ import { createNewProduct } from "~/product";
 import Modal from "../-components/modals";
 import AddCategoryForm from "../-components/forms/add-category.form";
 import { CreateProductSchema } from "~/schema/product.schema";
-import { ApiError } from "~/lib/error";
+import { z } from "zod";
 
 export const Route = createFileRoute("/$tenant/inventory/create-product")({
   loader: async ({ context: { queryClient } }) => {
@@ -20,10 +20,10 @@ export const Route = createFileRoute("/$tenant/inventory/create-product")({
 });
 
 function CreateProduct() {
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
-  const navigate = useNavigate({from: "/$tenant/inventory/create-product"})
+  const navigate = useNavigate({ from: "/$tenant/inventory/create-product" });
 
   function closeModal() {
     setIsOpen(false);
@@ -40,11 +40,11 @@ function CreateProduct() {
     mutationFn: createNewProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      navigate({to: "/$tenant/inventory/products"})
+      navigate({ to: "/$tenant/inventory/products" });
     },
     onError: (error) => {
-      console.error("Something went wrong", error)
-    }
+      console.error("Something went wrong", error);
+    },
   });
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -56,17 +56,19 @@ function CreateProduct() {
       name: payload.get("name") as string,
       code: payload.get("code") as string,
       categoryId: payload.get("category") as string,
+      unitId: Number(payload.get("unit")),
       price: Number(payload.get("price")),
       cost: Number(payload.get("cost")),
       description: payload.get("description")?.toString(),
-    })
+    });
     if (!result.success) {
-      setFieldErrors(result.error.flatten().fieldErrors)
+      const flatten = z.flattenError(result.error);
+      setFieldErrors(flatten.fieldErrors);
       return;
     }
-    
-    setFieldErrors({})
-    mutation.mutate(result.data)
+
+    setFieldErrors({});
+    mutation.mutate(result.data);
   }
 
   return (
@@ -139,6 +141,7 @@ function CreateProduct() {
               name="category"
               className="py-2 px-4 rounded-md border border-gray-500"
             >
+              <option value="">Select category</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -148,10 +151,26 @@ function CreateProduct() {
             <button
               type="button"
               onClick={() => openCategory()}
-              className="py-2 px-4 rounded-md bg-stone-500/50 border border-white"
+              className="py-2 px-4 rounded-md bg-stone-500/50 border border-white font-medium"
             >
               + New Category
             </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="unit">Unit</label>
+            <select
+              name="unit"
+              className="py-2 px-4 rounded-md border border-gray-500"
+            >
+              <option value="">Select unit</option>
+              <option value="1">Piece</option>
+              <option value="2">Kg</option>
+              <option value="4">Liter</option>
+              <option value="5">Meter</option>
+              <option value="6">Box</option>
+              <option value="7">Doz</option>
+              <option value="8">Pack</option>
+            </select>
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="price">Price</label>

@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { productQueryOptions } from "~/productQueryOptions";
 import { getProductDetail, type Product } from "~/product";
-import { useDebounceCallback } from "~/lib/debounce";
+import { useDebounceCallback } from "~/hooks/debounce";
 import Modal from "../-components/modals";
 import EditProductForm from "../-components/forms/edit-product.form";
 import { PaginationProductSchema } from "~/schema/product.schema";
@@ -132,6 +132,9 @@ function ProductsComponent() {
                 Stock
               </th>
               <th className="p-2 font-semibold border dark:border-stone-100 text-center">
+                Unit
+              </th>
+              <th className="p-2 font-semibold border dark:border-stone-100 text-center">
                 Actions
               </th>
             </tr>
@@ -139,7 +142,7 @@ function ProductsComponent() {
           <tbody>
             {products.map((product, i) => (
               <tr key={product.id} className="font-light">
-                <td className="p-2 border">{(i + 1) + ((page - 1) * limit)}</td>
+                <td className="p-2 border">{i + 1 + (page - 1) * limit}</td>
                 <td className="p-2 border">{product.name}</td>
                 <td className="p-2 border">{product.code}</td>
                 <td className="p-2 border text-center">
@@ -148,6 +151,7 @@ function ProductsComponent() {
                 <td className="p-2 border text-right">{product.price}</td>
                 <td className="p-2 border text-right">{product.cost}</td>
                 <td className="p-2 border text-center">{product.stock}</td>
+                <td className="p-2 border text-center">{product.unit}</td>
                 <td className="p-2 border">
                   <div className="flex items-center justify-center">
                     <button

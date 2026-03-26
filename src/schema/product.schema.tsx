@@ -8,8 +8,9 @@ export const CreateProductSchema = z.object({
     name: z.string().min(2, "At least 2 characters"),
     code: z.string().min(2, "At least 2 characters"),
     categoryId: z.string().min(1, "Category is required"),
-    price: z.coerce.number().min(0, "Must be 0 or greater"),
-    cost: z.coerce.number().min(0, "Must be 0 or greater"),
+    unitId: z.coerce.number().int().positive().optional(),
+    price: z.coerce.number("Must be a number").int().min(0, "Must be 0 or greater"),
+    cost: z.coerce.number("Must be a number").int().min(0, "Must be 0 or greater"),
     description: z.string().optional()
 })
 
@@ -19,10 +20,11 @@ export const UpdateProductSchema = z.object({
       .string()
       .min(2, "At least has 2 characters")
       .optional(),
-    price: z.coerce.number().positive("Must be positive number").optional(),
-    cost: z.coerce.number().positive("Must be positive number").optional(),
+    price: z.coerce.number("Must be a number").positive("Must be positive number").optional(),
+    cost: z.coerce.number("Must be a number").positive("Must be positive number").optional(),
     description: z.string().optional(),
     categoryId: z.string().min(1, "category is required"),
+    unitId: z.coerce.number().int().positive().optional()
 });
 
 export const PaginationProductSchema = z.object({

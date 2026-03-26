@@ -12,6 +12,7 @@ export type Product = {
     price: number
     cost: number
     stock: number
+    unit: string
 }
 
 export type ProductsReturn = {
