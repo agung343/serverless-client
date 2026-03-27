@@ -142,7 +142,7 @@ function ProductsComponent() {
           </thead>
           <tbody>
             {products.map((product, i) => (
-              <tr key={product.id} className="font-light">
+              <tr key={product.id} className="font-light text-sm lg:text-base odd:bg-gray-100/50 even:bg-gray-200/50">
                 <td className="p-2 border">{i + 1 + (page - 1) * limit}</td>
                 <td className="p-2 border">{product.name}</td>
                 <td className="p-2 border">{product.code}</td>
