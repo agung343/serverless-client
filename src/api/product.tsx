@@ -1,6 +1,6 @@
 import { api } from "./client";
 import { ApiError } from "../lib/error";
-import type { CreateProductPayload, UpdateProductPayload, ProductQuery } from "../schema/product.schema";
+import type { CreateProductPayload, UpdateProductPayload, ProductQuery, ProductCashierQuery } from "../schema/product.schema";
 
 export type Product = {
     id: string
@@ -32,8 +32,7 @@ export type ProductsForCashierReturn = {
         id: string
         name: string
         code: string
-        price: string
-        cost: string
+        price: number
     }[]
 }
 
@@ -73,6 +72,22 @@ export const getAllProducts = async (params: ProductQuery) => {
         throw new Error(message, {cause: status}) 
     }
 }
+
+export const getProductsCashier = async (params: ProductCashierQuery) => {
+    const searchParams = new URLSearchParams()
+    if (params.search) searchParams.set("search", params.search)
+
+    const url = `/inventory/cashier?${searchParams.toString()}`
+
+    try {
+        const res = await api.get<ProductsForCashierReturn>(url)
+        return res.data
+    } catch (error:any) {
+        const message = error?.data.message || "Something went wrong"
+        const status = error.status || 500;
+        throw new Error(message, {cause: status}) 
+    }
+}   
 
 export const createNewProduct = async (payload: CreateProductPayload) => {
     try {

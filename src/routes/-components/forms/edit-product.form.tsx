@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { set, z } from "zod";
 import {
   useSuspenseQuery,
   useMutation,
@@ -8,10 +6,7 @@ import {
 import { productDetailsQueryOptions } from "~/productQueryOptions";
 import { categoriesQueryOptions } from "~/categoryQueryOption";
 import { updateProduct } from "~/api/product";
-import {
-  type UpdateProductPayload,
-  UpdateProductSchema,
-} from "~/schema/product.schema";
+import { type UpdateProductPayload } from "~/schema/product.schema";
 
 interface Props {
   onSuccess: () => void;
@@ -19,7 +14,6 @@ interface Props {
 }
 
 export default function EditProductForm({ onSuccess, productId }: Props) {
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const queryClient = useQueryClient();
 
   const { data: product } = useSuspenseQuery(
@@ -45,23 +39,16 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const result = UpdateProductSchema.safeParse({
-      name: formData.get("name"),
-      code: formData.get("code"),
-      categoryId: formData.get("category"),
-      unitId: formData.get("unit"),
-      price: formData.get("price"),
-      cost: formData.get("cost"),
-      description: formData.get("description"),
-    });
-    if (!result.success) {
-      const flatten = z.flattenError(result.error);
-      setFieldErrors(flatten.fieldErrors);
-      return;
-    }
-    const payload = result.data;
+    const payload: UpdateProductPayload = {
+      name: formData.get("name") as string,
+      code: formData.get("code") as string,
+      price: Number(formData.get("price")),
+      cost: Number(formData.get("cost")),
+      description: formData.get("description") as string,
+      categoryId: formData.get("category") as string,
+    };
+
     updateMutation.mutate(payload);
-    setFieldErrors({});
   }
 
   return (
@@ -71,14 +58,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
       </h1>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <label htmlFor="name" className="font-semibold text-gray-800/70">
-            Name{" "}
-            {fieldErrors?.name && (
-              <span className="text-sm font-light text-red-500">
-                {fieldErrors.name[0]}
-              </span>
-            )}
-          </label>
+          <label htmlFor="name" className="font-semibold text-gray-800/70">Name</label>
           <input
             type="text"
             name="name"
@@ -87,14 +67,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="code" className="font-semibold text-gray-800/70">
-            Code{" "}
-            {fieldErrors?.code && (
-              <span className="text-sm font-light text-red-500">
-                {fieldErrors.code[0]}
-              </span>
-            )}
-          </label>
+          <label htmlFor="code" className="font-semibold text-gray-800/70">Code</label>
           <input
             type="text"
             name="code"
@@ -103,9 +76,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="category" className="font-semibold text-gray-800/70">
-            Category
-          </label>
+          <label htmlFor="category" className="font-semibold text-gray-800/70">Category</label>
           <select
             name="category"
             className="py-2 px-4 rounded-md border border-gray-500"
@@ -119,9 +90,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           </select>
         </div>
         <div className="flex items-center gap-2">
-          <label htmlFor="unit" className="font-semibold text-gray-800/70">
-            Unit
-          </label>
+          <label htmlFor="unit" className="font-semibold text-gray-800/70">Unit</label>
           <select
             name="unit"
             className="py-2 px-4 rounded-md border border-gray-500"
@@ -137,15 +106,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           </select>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="price" className="font-semibold">
-            Price
-            {" "}
-            {fieldErrors?.price && (
-              <span className="text-sm font-light text-red-500">
-                {fieldErrors.price[0]}
-              </span>
-            )}
-          </label>
+          <label htmlFor="price" className="font-semibold">Price</label>
           <input
             type="text"
             name="price"
@@ -154,15 +115,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="cost" className="font-semibold">
-            Cost
-            {" "}
-            {fieldErrors?.cost && (
-              <span className="text-sm font-light text-red-500">
-                {fieldErrors.cost[0]}
-              </span>
-            )}
-          </label>
+          <label htmlFor="cost" className="font-semibold">Cost</label>
           <input
             type="text"
             name="cost"
@@ -171,9 +124,7 @@ export default function EditProductForm({ onSuccess, productId }: Props) {
           />
         </div>{" "}
         <div className="flex flex-col gap-2">
-          <label htmlFor="description" className="font-semibold">
-            Description
-          </label>
+          <label htmlFor="description" className="font-semibold">Description</label>
           <textarea
             rows={2}
             name="description"

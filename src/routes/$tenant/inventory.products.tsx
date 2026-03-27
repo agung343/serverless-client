@@ -12,6 +12,7 @@ import Modal from "../-components/modals";
 import EditProductForm from "../-components/forms/edit-product.form";
 import { PaginationProductSchema } from "~/schema/product.schema";
 import { usePrefetch } from "~/hooks/usePrefetch";
+import { formatUnit } from "~/lib/unit";
 
 export const Route = createFileRoute("/$tenant/inventory/products")({
   validateSearch: PaginationProductSchema,
@@ -150,7 +151,7 @@ function ProductsComponent() {
                 </td>
                 <td className="p-2 border text-right">{product.price}</td>
                 <td className="p-2 border text-right">{product.cost}</td>
-                <td className="p-2 border text-center">{product.stock}</td>
+                <td className="p-2 border text-center">{formatUnit(product.stock)}</td>
                 <td className="p-2 border text-center">{product.unit}</td>
                 <td className="p-2 border">
                   <div className="flex items-center justify-center">

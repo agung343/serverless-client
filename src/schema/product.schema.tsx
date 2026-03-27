@@ -33,7 +33,12 @@ export const PaginationProductSchema = z.object({
     limit: z.coerce.number().int().positive().max(100).default(25)
 })
 
+export const ProductCashierSchema = z.object({
+    search: z.string().optional()
+})
+
 export type CreateCategoryPayload = z.infer<typeof CreateNewCategorySchema>
 export type CreateProductPayload = z.infer<typeof CreateProductSchema>
 export type UpdateProductPayload = z.infer<typeof UpdateProductSchema>
 export type ProductQuery = z.infer<typeof PaginationProductSchema>
+export type ProductCashierQuery = z.infer<typeof ProductCashierSchema>

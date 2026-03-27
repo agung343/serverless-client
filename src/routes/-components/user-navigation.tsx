@@ -61,7 +61,8 @@ export default function UserNavigation({
             </Link>
           )}
           <NavDropDown label="Expenses" items={[
-            {label: "Purchase" , to: `/${tenant}/expenses/purchase`}
+            {label: "Purchase" , to: `/${tenant}/expenses/purchase`},
+            {label: "Operational", to: `/${tenant}/expenses/operational`},
           ]} />
         </nav>
       </div>
