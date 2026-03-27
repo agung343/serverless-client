@@ -14,6 +14,7 @@ function RouteComponent() {
             params={{ tenant }}
             className="font-light"
             activeProps={{ className: "!font-bold text-blue-500 underline" }}
+            activeOptions={{ exact: true }}
           >
             Purchase
           </Link>
@@ -22,6 +23,7 @@ function RouteComponent() {
             params={{ tenant }}
             className="font-light"
             activeProps={{ className: "!font-bold text-blue-500 underline" }}
+            activeOptions={{ exact: true }}
           >
             Operational
           </Link>
