@@ -8,8 +8,8 @@ import {
 import { productQueryOptions } from "~/productQueryOptions";
 import { getProductDetail, type Product } from "~/api/product";
 import { useDebounceCallback } from "~/hooks/debounce";
-import Modal from "../-components/modals";
-import EditProductForm from "../-components/forms/edit-product.form";
+import Modal from "../../-components/modals";
+import EditProductForm from "../../-components/forms/edit-product.form";
 import { PaginationProductSchema } from "~/schema/product.schema";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import { formatUnit } from "~/lib/unit";

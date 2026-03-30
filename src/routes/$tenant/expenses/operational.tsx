@@ -9,9 +9,9 @@ import { operationalExpensesQueryOptions } from "~/expensesQueryOptions";
 import { PaginationOperationalSchema } from "~/schema/expenses.schema";
 import { useDebounceCallback } from "~/hooks/debounce";
 import { dateSummary } from "~/lib/date";
-import Modal from "../-components/modals";
-import AddExpenseOperationalForm from "../-components/forms/add-expenseOperational.form";
 import { formatRupiah } from "~/lib/rupiah_currency";
+import Modal from "../../-components/modals";
+import AddOperationalForm from "../../-components/forms/add-operational";
 
 export const Route = createFileRoute("/$tenant/expenses/operational")({
   validateSearch: PaginationOperationalSchema,
@@ -179,7 +179,7 @@ function ExpenseOperational() {
       </div>
       {isOpen && (
         <Modal onClose={() => setIsOpen(false)} open={isOpen}>
-          <AddExpenseOperationalForm
+          <AddOperationalForm
             onSuccess={() => {
               setIsOpen(false);
               navigate({

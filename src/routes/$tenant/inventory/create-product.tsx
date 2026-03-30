@@ -7,8 +7,8 @@ import {
 } from "@tanstack/react-query";
 import { categoriesQueryOptions } from "~/categoryQueryOption";
 import { createNewProduct } from "~/api/product";
-import Modal from "../-components/modals";
-import AddCategoryForm from "../-components/forms/add-category.form";
+import Modal from "../../-components/modals";
+import AddCategoryForm from "../../-components/forms/add-category.form";
 import { CreateProductSchema } from "~/schema/product.schema";
 import { z } from "zod";
 
