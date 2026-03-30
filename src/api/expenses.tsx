@@ -1,6 +1,6 @@
 import { api } from "./client";
 import { ApiError } from "../lib/error";
-import type { CreateExpenseOperationalPayload, OperationalQuery } from "~/schema/expenses.schema";
+import type { CreateNewExpenseOperationalPayload, ExpenseQuery } from "~/schema/expense.schema";
 
 export type OperationalExpense = {
   id: number;
@@ -29,7 +29,7 @@ const toApiError = (error:any): ApiError => {
   return new ApiError(message, status, details)
 }
 
-export const getOperationalExpenses = async (params: OperationalQuery) => {
+export const getOperationalExpenses = async (params: ExpenseQuery) => {
   const searchParams = new URLSearchParams();
   if (params.search) searchParams.set("search", params.search);
   if (params.page) searchParams.set("page", params.page.toString());
@@ -45,7 +45,7 @@ export const getOperationalExpenses = async (params: OperationalQuery) => {
   }
 }
 
-export const createOperationalExpense = async (payload: CreateExpenseOperationalPayload) => {
+export const createOperationalExpense = async (payload: CreateNewExpenseOperationalPayload) => {
   try {
     const res = await api.post<OperationalExpense>("/expenses/operational", payload);
     return res.data;

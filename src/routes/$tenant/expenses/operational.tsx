@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { operationalExpensesQueryOptions } from "~/expensesQueryOptions";
-import { PaginationOperationalSchema } from "~/schema/expenses.schema";
+import { PaginationExpenseQuery } from "~/schema/expense.schema";
 import { useDebounceCallback } from "~/hooks/debounce";
 import { dateSummary } from "~/lib/date";
 import { formatRupiah } from "~/lib/rupiah_currency";
@@ -14,7 +14,7 @@ import Modal from "../../-components/modals";
 import AddOperationalForm from "../../-components/forms/add-operational";
 
 export const Route = createFileRoute("/$tenant/expenses/operational")({
-  validateSearch: PaginationOperationalSchema,
+  validateSearch: PaginationExpenseQuery,
   loaderDeps: ({ search }) => ({
     search: search.search,
     page: search.page,

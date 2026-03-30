@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOperational } from "~/api/expenses";
+import { createOperationalExpense } from "~/api/expenses";
 import { CreateNewExpenseOperationalSchema } from "~/schema/expense.schema";
 
 interface Props {
@@ -13,7 +13,7 @@ export default function AddOperationalForm({ onSuccess }: Props) {
 
   const queryClient = useQueryClient();
   const OperationalMutation = useMutation({
-    mutationFn: createOperational,
+    mutationFn: createOperationalExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["operationals"] });
       onSuccess();
