@@ -6,7 +6,7 @@ export function dateTransaction(date: Date): string {
         hour: '2-digit',
         minute: '2-digit',
     };
-    return date.toLocaleDateString('id-ID', options);
+    return date.toLocaleString('id-ID', options);
 }
 
 export function dateSummary(date: Date): string {
@@ -15,5 +15,5 @@ export function dateSummary(date: Date): string {
         month: 'long',
         day: 'numeric',
     };
-    return date.toLocaleDateString('id-ID', options);
+    return date.toLocaleString('id-ID', options);
 }

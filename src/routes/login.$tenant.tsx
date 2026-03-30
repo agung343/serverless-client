@@ -29,15 +29,17 @@ function LoginComponents() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: session } = useQuery(authQueryOptions());
+  const { data: session, isLoading } = useQuery(authQueryOptions());
 
   const loginMutation = useMutation({
     mutationFn: login,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth"] });
+    onSuccess: async (payload) => {
+      await queryClient.setQueryData(["auth"], payload);
       navigate({ to: `/$tenant/kasir`, params: { tenant }, replace: true });
     },
   });
+
+  if (isLoading) return null
 
   if (session) {
     return <Navigate to={`/$tenant/kasir`} params={{ tenant }} replace />;
