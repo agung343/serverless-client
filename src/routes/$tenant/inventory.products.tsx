@@ -37,6 +37,7 @@ function ProductsComponent() {
   const [selectedProduct, setSelectedProduct] = useState<Product["id"] | null>(
     null
   );
+  const [modalType, setModalType] = useState<string | null>(null)
   const { search, page, limit } = useSearch({
     from: "/$tenant/inventory/products",
   });
@@ -70,12 +71,20 @@ function ProductsComponent() {
 
   function closeModal() {
     setIsOpen(false);
+    setModalType(null)
     setSelectedProduct(null);
   }
 
   function openEditModal(productId: string) {
     setIsOpen(true);
+    setModalType("edit")
     setSelectedProduct(productId);
+  }
+
+  function openAdjustment(productId:string) {
+    setIsOpen(true)
+    setModalType("adjust")
+    setSelectedProduct(productId)
   }
 
   return (
@@ -135,7 +144,7 @@ function ProductsComponent() {
               <th className="p-2 font-semibold border dark:border-stone-100 text-center">
                 Unit
               </th>
-              <th className="p-2 font-semibold border dark:border-stone-100 text-center">
+              <th className="p-2 font-semibold border dark:border-stone-100 text-center w-64">
                 Actions
               </th>
             </tr>
@@ -149,12 +158,12 @@ function ProductsComponent() {
                 <td className="p-2 border text-center">
                   {product.category.name}
                 </td>
-                <td className="p-2 border text-right">{product.price}</td>
-                <td className="p-2 border text-right">{product.cost}</td>
-                <td className="p-2 border text-center">{formatUnit(product.stock)}</td>
-                <td className="p-2 border text-center">{product.unit}</td>
-                <td className="p-2 border">
-                  <div className="flex items-center justify-center">
+                <td className="p-2 border dark:border-stone-100 text-right">{product.price}</td>
+                <td className="p-2 border dark:border-stone-100 text-right">{product.cost}</td>
+                <td className="p-2 border dark:border-stone-100 text-center">{formatUnit(product.stock)}</td>
+                <td className="p-2 border dark:border-stone-100 text-center">{product.unit}</td>
+                <td className="p-2 border dark:border-stone-100">
+                  <div className="flex items-center justify-center gap-2.5">
                     <button
                       onClick={() => openEditModal(product.id)}
                       onMouseEnter={() =>
@@ -169,6 +178,21 @@ function ProductsComponent() {
                       className="py-2 px-4 rounded-md bg-gray-300/50 dark:bg-gray-100 text-stone-800 hover:cursor-pointer active:bg-gray-300"
                     >
                       Edit
+                    </button>
+                    <button
+                      onClick={() => openAdjustment(product.id)}
+                      onMouseEnter={() =>
+                        prefetch([
+                          {
+                            queryKey: ["product-detail", product.id],
+                            queryFn: () => getProductDetail(product.id),
+                            staleTime: 1000 * 60 * 5,
+                          },
+                        ])
+                      }
+                      className="py-2 px-4 rounded-md bg-yellow-300/50 dark:bg-yellow-500 text-stone-800 hover:cursor-pointer active:bg-yellow-300"
+                    >
+                      Adjust
                     </button>
                   </div>
                 </td>
@@ -198,9 +222,15 @@ function ProductsComponent() {
         </div>
       </div>
 
-      {isOpen && selectedProduct && (
+      {isOpen && selectedProduct && modalType === "edit" && (
         <Modal open={isOpen} onClose={closeModal}>
           <EditProductForm onSuccess={closeModal} productId={selectedProduct} />
+        </Modal>
+      )}
+
+      {isOpen && selectedProduct && modalType === "adjust" && (
+        <Modal open={isOpen} onClose={closeModal}>
+          <h2 className="text-center text-2xl">Adjust Product Stock</h2>
         </Modal>
       )}
     </main>

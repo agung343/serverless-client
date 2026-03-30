@@ -7,13 +7,14 @@ export function dateTransaction(date: Date): string {
         minute: '2-digit',
     };
     return date.toLocaleString('id-ID', options);
+    return date.toLocaleString('id-ID', options);
 }
 
 export function dateSummary(date: Date): string {
-   return date.toLocaleString("id-ID", {
-        timeZone: "Asia/Jakarta",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-    });
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    };
+    return date.toLocaleString('id-ID', options);
 }

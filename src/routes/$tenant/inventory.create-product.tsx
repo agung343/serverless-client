@@ -87,14 +87,14 @@ function CreateProduct() {
         </h1>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor="name" className="font-semibold text-gray-800/70">
+            <label htmlFor="name" className="font-semibold text-gray-800/70 dark:text-gray-200/50">
               Name{" "}
               {fieldErrors.name ? (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   {fieldErrors.name[0]}
                 </span>
               ) : (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   *required
                 </span>
               )}
@@ -106,14 +106,14 @@ function CreateProduct() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="code" className="font-semibold text-gray-800/70">
+            <label htmlFor="code" className="font-semibold text-gray-800/70 dark:text-gray-200/50">
               Code{" "}
               {fieldErrors.code ? (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   {fieldErrors.code[0]}
                 </span>
               ) : (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   *required
                 </span>
               )}
@@ -127,15 +127,15 @@ function CreateProduct() {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="category"
-              className="font-semibold text-gray-800/70"
+              className="font-semibold text-gray-800/70 dark:text-gray-200/50"
             >
               Category{" "}
               {fieldErrors.categoryId ? (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   {fieldErrors.categoryId[0]}
                 </span>
               ) : (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   *required
                 </span>
               )}
@@ -160,10 +160,10 @@ function CreateProduct() {
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="unit" className="font-semibold text-gray-800/70">
+            <label htmlFor="unit" className="font-semibold text-gray-800/70 dark:text-gray-200/50">
               Unit{" "}
               {fieldErrors?.unitId && (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   {fieldErrors.categoryId[0]}
                 </span>
               )}
@@ -183,10 +183,10 @@ function CreateProduct() {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="price" className="font-semibold text-gray-800/70">
+            <label htmlFor="price" className="font-semibold text-gray-800/70 dark:text-gray-200/50">
               Price{" "}
               {fieldErrors?.price && (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   {fieldErrors.price[0]}
                 </span>
               )}
@@ -198,10 +198,10 @@ function CreateProduct() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="cost" className="font-semibold text-gray-800/70">
+            <label htmlFor="cost" className="font-semibold text-gray-800/70 dark:text-gray-200/50">
               Cost{" "}
               {fieldErrors?.cost && (
-                <span className="text-sm font-light text-red-500/50">
+                <span className="text-sm font-light text-red-500/50 dark:text-red-500">
                   {fieldErrors.cost[0]}
                 </span>
               )}
@@ -213,7 +213,7 @@ function CreateProduct() {
             />
           </div>{" "}
           <div className="flex flex-col gap-2">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className="font-semibold text-gray-800/70 dark:text-gray-200/50">Description</label>
             <textarea
               rows={2}
               name="description"
