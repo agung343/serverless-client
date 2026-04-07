@@ -34,15 +34,15 @@ function LoginComponents() {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: async (payload) => {
-      await queryClient.setQueryData(["auth"], payload);
-      navigate({ to: `/$tenant/kasir`, params: { tenant }, replace: true });
+      await queryClient.invalidateQueries({queryKey: ["auth"]});
+      navigate({ to: `/$tenant/cashier`, params: { tenant }, replace: true });
     },
   });
 
   if (isLoading) return null
 
   if (session) {
-    return <Navigate to={`/$tenant/kasir`} params={{ tenant }} replace />;
+    return <Navigate to={`/$tenant/cashier`} params={{ tenant }} replace />;
   }
 
   const error = loginMutation.error as any;

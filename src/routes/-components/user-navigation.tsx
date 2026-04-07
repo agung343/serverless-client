@@ -32,13 +32,12 @@ export default function UserNavigation({
         <h1 className="lg:text-xl text-stone-800">POS & INVENTORY</h1>
         <nav className="flex items-center gap-2">
           <Link
-            to={`/$tenant/kasir`}
+            to={`/$tenant/cashier`}
             params={{ tenant }}
             className="font-light text-sm lg:text-base"
             activeProps={{ className: "!font-bold underline text-blue-500/50" }}
-            activeOptions={{ exact: true }}
           >
-            Kasir
+            Cashier
           </Link>
           <NavDropDown
             label="Inventory"
@@ -46,7 +45,7 @@ export default function UserNavigation({
               { label: "Products", to: `/${tenant}/inventory/products` },
               { label: "Create Product", to: `/${tenant}/inventory/create-product`},
               { label: "Category", to: `/${tenant}/inventory/category`},
-              { label: "Return", to: `/${tenant}/inventory/return` },
+              { label: "Stock", to: `/${tenant}/inventory/stock` },
             ]}
           />
           {isAdmin && (

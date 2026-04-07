@@ -14,15 +14,18 @@ import { Route as TenantRouteRouteImport } from './routes/$tenant/route'
 import { Route as staticIndexRouteImport } from './routes/(static)/index'
 import { Route as LoginTenantRouteImport } from './routes/login.$tenant'
 import { Route as staticServicesRouteImport } from './routes/(static)/services'
-import { Route as TenantKasirRouteImport } from './routes/$tenant/kasir'
 import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
 import { Route as TenantInventoryRouteRouteImport } from './routes/$tenant/inventory/route'
 import { Route as TenantExpensesRouteRouteImport } from './routes/$tenant/expenses/route'
+import { Route as TenantCashierRouteRouteImport } from './routes/$tenant/cashier/route'
+import { Route as TenantCashierIndexRouteImport } from './routes/$tenant/cashier/index'
+import { Route as TenantInventoryStockRouteImport } from './routes/$tenant/inventory/stock'
 import { Route as TenantInventoryProductsRouteImport } from './routes/$tenant/inventory/products'
 import { Route as TenantInventoryCreateProductRouteImport } from './routes/$tenant/inventory/create-product'
 import { Route as TenantInventoryCategoryRouteImport } from './routes/$tenant/inventory/category'
 import { Route as TenantExpensesPurchaseRouteImport } from './routes/$tenant/expenses/purchase'
 import { Route as TenantExpensesOperationalRouteImport } from './routes/$tenant/expenses/operational'
+import { Route as TenantCashierTodayRouteImport } from './routes/$tenant/cashier/today'
 
 const staticRouteRoute = staticRouteRouteImport.update({
   id: '/(static)',
@@ -48,11 +51,6 @@ const staticServicesRoute = staticServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => staticRouteRoute,
 } as any)
-const TenantKasirRoute = TenantKasirRouteImport.update({
-  id: '/kasir',
-  path: '/kasir',
-  getParentRoute: () => TenantRouteRoute,
-} as any)
 const TenantAdminRoute = TenantAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -67,6 +65,21 @@ const TenantExpensesRouteRoute = TenantExpensesRouteRouteImport.update({
   id: '/expenses',
   path: '/expenses',
   getParentRoute: () => TenantRouteRoute,
+} as any)
+const TenantCashierRouteRoute = TenantCashierRouteRouteImport.update({
+  id: '/cashier',
+  path: '/cashier',
+  getParentRoute: () => TenantRouteRoute,
+} as any)
+const TenantCashierIndexRoute = TenantCashierIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TenantCashierRouteRoute,
+} as any)
+const TenantInventoryStockRoute = TenantInventoryStockRouteImport.update({
+  id: '/stock',
+  path: '/stock',
+  getParentRoute: () => TenantInventoryRouteRoute,
 } as any)
 const TenantInventoryProductsRoute = TenantInventoryProductsRouteImport.update({
   id: '/products',
@@ -95,101 +108,122 @@ const TenantExpensesOperationalRoute =
     path: '/operational',
     getParentRoute: () => TenantExpensesRouteRoute,
   } as any)
+const TenantCashierTodayRoute = TenantCashierTodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => TenantCashierRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/$tenant': typeof TenantRouteRouteWithChildren
+  '/$tenant/cashier': typeof TenantCashierRouteRouteWithChildren
   '/$tenant/expenses': typeof TenantExpensesRouteRouteWithChildren
   '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
   '/$tenant/admin': typeof TenantAdminRoute
-  '/$tenant/kasir': typeof TenantKasirRoute
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/': typeof staticIndexRoute
+  '/$tenant/cashier/today': typeof TenantCashierTodayRoute
   '/$tenant/expenses/operational': typeof TenantExpensesOperationalRoute
   '/$tenant/expenses/purchase': typeof TenantExpensesPurchaseRoute
   '/$tenant/inventory/category': typeof TenantInventoryCategoryRoute
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
+  '/$tenant/inventory/stock': typeof TenantInventoryStockRoute
+  '/$tenant/cashier/': typeof TenantCashierIndexRoute
 }
 export interface FileRoutesByTo {
   '/$tenant': typeof TenantRouteRouteWithChildren
   '/$tenant/expenses': typeof TenantExpensesRouteRouteWithChildren
   '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
   '/$tenant/admin': typeof TenantAdminRoute
-  '/$tenant/kasir': typeof TenantKasirRoute
   '/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/': typeof staticIndexRoute
+  '/$tenant/cashier/today': typeof TenantCashierTodayRoute
   '/$tenant/expenses/operational': typeof TenantExpensesOperationalRoute
   '/$tenant/expenses/purchase': typeof TenantExpensesPurchaseRoute
   '/$tenant/inventory/category': typeof TenantInventoryCategoryRoute
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
+  '/$tenant/inventory/stock': typeof TenantInventoryStockRoute
+  '/$tenant/cashier': typeof TenantCashierIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/$tenant': typeof TenantRouteRouteWithChildren
   '/(static)': typeof staticRouteRouteWithChildren
+  '/$tenant/cashier': typeof TenantCashierRouteRouteWithChildren
   '/$tenant/expenses': typeof TenantExpensesRouteRouteWithChildren
   '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
   '/$tenant/admin': typeof TenantAdminRoute
-  '/$tenant/kasir': typeof TenantKasirRoute
   '/(static)/services': typeof staticServicesRoute
   '/login/$tenant': typeof LoginTenantRoute
   '/(static)/': typeof staticIndexRoute
+  '/$tenant/cashier/today': typeof TenantCashierTodayRoute
   '/$tenant/expenses/operational': typeof TenantExpensesOperationalRoute
   '/$tenant/expenses/purchase': typeof TenantExpensesPurchaseRoute
   '/$tenant/inventory/category': typeof TenantInventoryCategoryRoute
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
+  '/$tenant/inventory/stock': typeof TenantInventoryStockRoute
+  '/$tenant/cashier/': typeof TenantCashierIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/$tenant'
+    | '/$tenant/cashier'
     | '/$tenant/expenses'
     | '/$tenant/inventory'
     | '/$tenant/admin'
-    | '/$tenant/kasir'
     | '/services'
     | '/login/$tenant'
     | '/'
+    | '/$tenant/cashier/today'
     | '/$tenant/expenses/operational'
     | '/$tenant/expenses/purchase'
     | '/$tenant/inventory/category'
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
+    | '/$tenant/inventory/stock'
+    | '/$tenant/cashier/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/$tenant'
     | '/$tenant/expenses'
     | '/$tenant/inventory'
     | '/$tenant/admin'
-    | '/$tenant/kasir'
     | '/services'
     | '/login/$tenant'
     | '/'
+    | '/$tenant/cashier/today'
     | '/$tenant/expenses/operational'
     | '/$tenant/expenses/purchase'
     | '/$tenant/inventory/category'
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
+    | '/$tenant/inventory/stock'
+    | '/$tenant/cashier'
   id:
     | '__root__'
     | '/$tenant'
     | '/(static)'
+    | '/$tenant/cashier'
     | '/$tenant/expenses'
     | '/$tenant/inventory'
     | '/$tenant/admin'
-    | '/$tenant/kasir'
     | '/(static)/services'
     | '/login/$tenant'
     | '/(static)/'
+    | '/$tenant/cashier/today'
     | '/$tenant/expenses/operational'
     | '/$tenant/expenses/purchase'
     | '/$tenant/inventory/category'
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
+    | '/$tenant/inventory/stock'
+    | '/$tenant/cashier/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -235,13 +269,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof staticServicesRouteImport
       parentRoute: typeof staticRouteRoute
     }
-    '/$tenant/kasir': {
-      id: '/$tenant/kasir'
-      path: '/kasir'
-      fullPath: '/$tenant/kasir'
-      preLoaderRoute: typeof TenantKasirRouteImport
-      parentRoute: typeof TenantRouteRoute
-    }
     '/$tenant/admin': {
       id: '/$tenant/admin'
       path: '/admin'
@@ -262,6 +289,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/$tenant/expenses'
       preLoaderRoute: typeof TenantExpensesRouteRouteImport
       parentRoute: typeof TenantRouteRoute
+    }
+    '/$tenant/cashier': {
+      id: '/$tenant/cashier'
+      path: '/cashier'
+      fullPath: '/$tenant/cashier'
+      preLoaderRoute: typeof TenantCashierRouteRouteImport
+      parentRoute: typeof TenantRouteRoute
+    }
+    '/$tenant/cashier/': {
+      id: '/$tenant/cashier/'
+      path: '/'
+      fullPath: '/$tenant/cashier/'
+      preLoaderRoute: typeof TenantCashierIndexRouteImport
+      parentRoute: typeof TenantCashierRouteRoute
+    }
+    '/$tenant/inventory/stock': {
+      id: '/$tenant/inventory/stock'
+      path: '/stock'
+      fullPath: '/$tenant/inventory/stock'
+      preLoaderRoute: typeof TenantInventoryStockRouteImport
+      parentRoute: typeof TenantInventoryRouteRoute
     }
     '/$tenant/inventory/products': {
       id: '/$tenant/inventory/products'
@@ -298,8 +346,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantExpensesOperationalRouteImport
       parentRoute: typeof TenantExpensesRouteRoute
     }
+    '/$tenant/cashier/today': {
+      id: '/$tenant/cashier/today'
+      path: '/today'
+      fullPath: '/$tenant/cashier/today'
+      preLoaderRoute: typeof TenantCashierTodayRouteImport
+      parentRoute: typeof TenantCashierRouteRoute
+    }
   }
 }
+
+interface TenantCashierRouteRouteChildren {
+  TenantCashierTodayRoute: typeof TenantCashierTodayRoute
+  TenantCashierIndexRoute: typeof TenantCashierIndexRoute
+}
+
+const TenantCashierRouteRouteChildren: TenantCashierRouteRouteChildren = {
+  TenantCashierTodayRoute: TenantCashierTodayRoute,
+  TenantCashierIndexRoute: TenantCashierIndexRoute,
+}
+
+const TenantCashierRouteRouteWithChildren =
+  TenantCashierRouteRoute._addFileChildren(TenantCashierRouteRouteChildren)
 
 interface TenantExpensesRouteRouteChildren {
   TenantExpensesOperationalRoute: typeof TenantExpensesOperationalRoute
@@ -318,29 +386,31 @@ interface TenantInventoryRouteRouteChildren {
   TenantInventoryCategoryRoute: typeof TenantInventoryCategoryRoute
   TenantInventoryCreateProductRoute: typeof TenantInventoryCreateProductRoute
   TenantInventoryProductsRoute: typeof TenantInventoryProductsRoute
+  TenantInventoryStockRoute: typeof TenantInventoryStockRoute
 }
 
 const TenantInventoryRouteRouteChildren: TenantInventoryRouteRouteChildren = {
   TenantInventoryCategoryRoute: TenantInventoryCategoryRoute,
   TenantInventoryCreateProductRoute: TenantInventoryCreateProductRoute,
   TenantInventoryProductsRoute: TenantInventoryProductsRoute,
+  TenantInventoryStockRoute: TenantInventoryStockRoute,
 }
 
 const TenantInventoryRouteRouteWithChildren =
   TenantInventoryRouteRoute._addFileChildren(TenantInventoryRouteRouteChildren)
 
 interface TenantRouteRouteChildren {
+  TenantCashierRouteRoute: typeof TenantCashierRouteRouteWithChildren
   TenantExpensesRouteRoute: typeof TenantExpensesRouteRouteWithChildren
   TenantInventoryRouteRoute: typeof TenantInventoryRouteRouteWithChildren
   TenantAdminRoute: typeof TenantAdminRoute
-  TenantKasirRoute: typeof TenantKasirRoute
 }
 
 const TenantRouteRouteChildren: TenantRouteRouteChildren = {
+  TenantCashierRouteRoute: TenantCashierRouteRouteWithChildren,
   TenantExpensesRouteRoute: TenantExpensesRouteRouteWithChildren,
   TenantInventoryRouteRoute: TenantInventoryRouteRouteWithChildren,
   TenantAdminRoute: TenantAdminRoute,
-  TenantKasirRoute: TenantKasirRoute,
 }
 
 const TenantRouteRouteWithChildren = TenantRouteRoute._addFileChildren(

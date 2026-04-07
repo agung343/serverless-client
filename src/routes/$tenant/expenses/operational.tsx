@@ -12,6 +12,9 @@ import { dateSummary } from "~/lib/date";
 import { formatRupiah } from "~/lib/rupiah_currency";
 import Modal from "../../-components/modals";
 import AddOperationalForm from "../../-components/forms/add-operational";
+import SearchInput from "~/routes/-components/search-input";
+import LimitSelect from "~/routes/-components/limit-select";
+import DateRange from "~/routes/-components/date-range";
 
 export const Route = createFileRoute("/$tenant/expenses/operational")({
   validateSearch: PaginationExpenseQuery,
@@ -80,51 +83,9 @@ function ExpenseOperational() {
     <main className="p-4 lg:p-8 min-h-screen">
       <h1 className="text-xl lg:text-3xl font-bold mb-6 text-center text-blue-800/70">Operational Expenses</h1>
       <div className="flex items-center justify-between text-sm lg:text-base">
-        <div className="flex items-center gap-2">
-          <label htmlFor="search" className="font-medium">
-            Search:
-          </label>
-          <input
-            type="text"
-            defaultValue={search}
-            onChange={(e) => debounceSearch(e.target.value)}
-            className="border rounded-md px-2 py-1 bg-stone-300/50 border-stone-800/50"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="dateRange" className="font-medium">
-            Date Range:
-          </label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => handleChangeDateRange(e.target.value, endDate)}
-            className="border rounded-md px-2 py-1 bg-stone-300/50 border-stone-800/50"
-          />
-          <span>-</span>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => handleChangeDateRange(startDate, e.target.value)}
-            className="border rounded-md px-2 py-1 bg-stone-300/50 border-stone-800/50"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="limit" className="font-medium">
-            Items per page:
-          </label>
-          <select
-            value={limit}
-            onChange={(e) => handleChangeLimit(Number(e.target.value))}
-            className="border rounded-md px-2 py-1 bg-stone-300/50 border-stone-800/50"
-          >
-            {[10, 25, 50, 100].map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
+        <SearchInput label="Search" defaultValue={search} onChange={debounceSearch} />
+        <DateRange startValue={startDate} endValue={endDate} onChange={handleChangeDateRange} />        
+        <LimitSelect value={limit} onChange={handleChangeLimit} />
       </div>
       <div className="flex items-center justify-center">
         <button

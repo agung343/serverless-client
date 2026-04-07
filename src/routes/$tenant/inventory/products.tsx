@@ -7,9 +7,11 @@ import {
 } from "@tanstack/react-router";
 import { productQueryOptions } from "~/productQueryOptions";
 import { getProductDetail, type Product } from "~/api/product";
+import { productKeys } from "~/productQueryOptions";
 import { useDebounceCallback } from "~/hooks/debounce";
 import Modal from "../../-components/modals";
 import EditProductForm from "../../-components/forms/edit-product.form";
+import AdjustForm from "~/routes/-components/forms/adjust-stock";
 import { PaginationProductSchema } from "~/schema/product.schema";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import { formatUnit } from "~/lib/unit";
@@ -110,7 +112,6 @@ function ProductsComponent() {
             onChange={(e) => handleChangeLimit(+e.target.value)}
             className="py-1 px-2.5 rounded-md bg-stone-300/50 border-stone-800"
           >
-            <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
@@ -169,7 +170,7 @@ function ProductsComponent() {
                       onMouseEnter={() =>
                         prefetch([
                           {
-                            queryKey: ["product-detail", product.id],
+                            queryKey: productKeys.detail(product.id),
                             queryFn: () => getProductDetail(product.id),
                             staleTime: 1000 * 60 * 5,
                           },
@@ -184,7 +185,7 @@ function ProductsComponent() {
                       onMouseEnter={() =>
                         prefetch([
                           {
-                            queryKey: ["product-detail", product.id],
+                            queryKey: productKeys.detail(product.id),
                             queryFn: () => getProductDetail(product.id),
                             staleTime: 1000 * 60 * 5,
                           },
@@ -230,7 +231,7 @@ function ProductsComponent() {
 
       {isOpen && selectedProduct && modalType === "adjust" && (
         <Modal open={isOpen} onClose={closeModal}>
-          <h2 className="text-center text-2xl">Adjust Product Stock</h2>
+          <AdjustForm productId={selectedProduct} onSuccess={closeModal} />
         </Modal>
       )}
     </main>

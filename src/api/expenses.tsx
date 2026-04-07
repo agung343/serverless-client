@@ -47,7 +47,7 @@ export const getOperationalExpenses = async (params: ExpenseQuery) => {
 
 export const createOperationalExpense = async (payload: CreateNewExpenseOperationalPayload) => {
   try {
-    const res = await api.post<OperationalExpense>("/expenses/operational", payload);
+    const res = await api.post("/expenses/operational", payload);
     return res.data;
   } catch (error:any) {
     throw toApiError(error);
