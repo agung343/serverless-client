@@ -1,6 +1,7 @@
 import { api } from "./client";
 import { ApiError } from "~/lib/error";
-import type { OrderQuery, CreateOrderPayload } from "~/schema/order.schema";
+import type { OrderQuery, CreateOrderPayload, EditOrderPayload, DeleteOrderPayload } from "~/schema/order.schema";
+import type { Meta } from "~/lib/meta";
 
 export type Order = {
   id: string;
@@ -22,28 +23,29 @@ export type Orders = {
   notes?: string;
 };
 
+export type Sale = Omit<Orders, "paid">
+export type SalesReturn = {
+  sales: Sale[]
+  meta: Meta
+}
+
 export type OrdersReturn = {
   orders: Orders[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
+  meta: Meta
 };
 
 export type OrderDetailsReturn = {
-  id: string;
-  invoice: string;
-  date: Date;
-  status: string;
-  totalAmount: string;
-  payment: string
-  paid: string;
-  notes?: string;
-  items: Order[];
+  order: {
+    id: string;
+    invoice: string;
+    date: Date;
+    status: string;
+    totalAmount: string;
+    paymentType: string
+    paid: string;
+    notes?: string;
+    items: Order[];
+  }
 };
 
 const toApiError = (error: any): ApiError => {
@@ -67,6 +69,36 @@ export const getOrdersTodays = async (params: OrderQuery) => {
     }
 }
 
+export const getAllSales = async (params: OrderQuery) => {
+  const searchParams = new URLSearchParams()
+  if (params.invoice) searchParams.set("invoice", params.invoice)
+  if (params.page) searchParams.set("page", String(params.page))
+  if (params.limit) searchParams.set("limit", String(params.limit))
+  if (params.startDate) searchParams.set("startDate", params.startDate)
+  if (params.endDate) searchParams.set("endDate", params.endDate)
+
+  try {
+    const res = await api.get<SalesReturn>(`/sales?${searchParams.toString()}`)
+    return res.data
+  } catch (error) {
+    throw toApiError(error)
+  }
+}
+
+export const getSalesArchieve = async (params: OrderQuery) => {
+  const searchParams = new URLSearchParams()
+  if (params.invoice) searchParams.set("invoice", params.invoice)
+  if (params.page) searchParams.set("page", String(params.page))
+  if (params.limit) searchParams.set("limit", String(params.limit))
+
+  try {
+    const res = await api.get<SalesReturn>(`/sales/archieve?${searchParams.toString()}`)
+    return res.data
+  } catch (error) {
+    throw toApiError(error)
+  }
+}
+
 export const getOrderDetails = async (orderId: string) => {
     try {
         const res = await api.get<OrderDetailsReturn>(`/orders/${orderId}`)
@@ -83,4 +115,22 @@ export const createOrderCashier = async (payload: CreateOrderPayload) => {
     } catch (error) {
         throw toApiError(error)
     }
+}
+
+export const archieveSale = async (orderId: string, payload: DeleteOrderPayload) => {
+  try {
+    const res = await api.patch(`/sales/${orderId}/delete`, payload)
+    return res.data
+  } catch (error) {
+    throw toApiError(error)
+  }
+}
+
+export const editOrder =  async (orderId: string, payload: EditOrderPayload) => {
+  try {
+    const res = await api.patch(`/sales/${orderId}`, payload)
+    return res.data
+  } catch (error) {
+    throw toApiError(error)
+  }
 }

@@ -6,29 +6,28 @@ import {
   useSearch,
 } from "@tanstack/react-router";
 import { productQueryOptions } from "~/productQueryOptions";
-import { getProductDetail, type Product } from "~/api/product";
+import { getAllProducts, getProductDetail, type Product } from "~/api/product";
 import { productKeys } from "~/productQueryOptions";
 import { useDebounceCallback } from "~/hooks/debounce";
 import Modal from "../../-components/modals";
 import EditProductForm from "../../-components/forms/edit-product.form";
 import AdjustForm from "~/routes/-components/forms/adjust-stock";
+import Pagination from "~/routes/-components/pagination";
 import { PaginationProductSchema } from "~/schema/product.schema";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import { formatUnit } from "~/lib/unit";
+import SearchInput from "~/routes/-components/search-input";
+import LimitSelect from "~/routes/-components/limit-select";
 
 export const Route = createFileRoute("/$tenant/inventory/products")({
   validateSearch: PaginationProductSchema,
-  loaderDeps: ({ search }) => ({
-    search: search.search,
-    page: search.page,
-    limit: search.limit,
-  }),
+  loaderDeps: ({ search }) => search,
   loader: async ({
     context: { queryClient },
-    deps: { search, page, limit },
+    deps,
   }) => {
     return queryClient.ensureQueryData(
-      productQueryOptions({ search, page, limit })
+      productQueryOptions(deps)
     );
   },
   component: ProductsComponent,
@@ -39,7 +38,7 @@ function ProductsComponent() {
   const [selectedProduct, setSelectedProduct] = useState<Product["id"] | null>(
     null
   );
-  const [modalType, setModalType] = useState<string | null>(null)
+  const [modalType, setModalType] = useState<string | null>(null);
   const { search, page, limit } = useSearch({
     from: "/$tenant/inventory/products",
   });
@@ -73,20 +72,20 @@ function ProductsComponent() {
 
   function closeModal() {
     setIsOpen(false);
-    setModalType(null)
+    setModalType(null);
     setSelectedProduct(null);
   }
 
   function openEditModal(productId: string) {
     setIsOpen(true);
-    setModalType("edit")
+    setModalType("edit");
     setSelectedProduct(productId);
   }
 
-  function openAdjustment(productId:string) {
-    setIsOpen(true)
-    setModalType("adjust")
-    setSelectedProduct(productId)
+  function openAdjustment(productId: string) {
+    setIsOpen(true);
+    setModalType("adjust");
+    setSelectedProduct(productId);
   }
 
   return (
@@ -96,27 +95,12 @@ function ProductsComponent() {
       </h1>
 
       <div className="flex items-center justify-between text-sm lg:text-base">
-        <div className="flex items-center gap-2">
-          <label>Search:</label>
-          <input
-            type="text"
-            className="py-1 px-2.5 rounded-md bg-stone-300/50 border-stone-800 text-stone-800"
-            defaultValue={search}
-            onChange={(e) => debounceSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <label>Rows:</label>
-          <select
-            value={limit}
-            onChange={(e) => handleChangeLimit(+e.target.value)}
-            className="py-1 px-2.5 rounded-md bg-stone-300/50 border-stone-800"
-          >
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
+        <SearchInput
+          label="Search"
+          defaultValue={search}
+          onChange={debounceSearch}
+        />
+        <LimitSelect value={limit} onChange={handleChangeLimit} />
       </div>
       <div className="overflow-auto max-h-150 mt-4 md:mt-6">
         <p className="text-sm font-light mb-1">Total: {meta.total}</p>
@@ -152,17 +136,28 @@ function ProductsComponent() {
           </thead>
           <tbody>
             {products.map((product, i) => (
-              <tr key={product.id} className="font-light text-sm lg:text-base odd:bg-gray-100/50 even:bg-gray-200/50">
+              <tr
+                key={product.id}
+                className="font-light text-sm lg:text-base odd:bg-gray-100/50 even:bg-gray-200/50"
+              >
                 <td className="p-2 border">{i + 1 + (page - 1) * limit}</td>
                 <td className="p-2 border">{product.name}</td>
                 <td className="p-2 border">{product.code}</td>
                 <td className="p-2 border text-center">
                   {product.category.name}
                 </td>
-                <td className="p-2 border dark:border-stone-100 text-right">{product.price}</td>
-                <td className="p-2 border dark:border-stone-100 text-right">{product.cost}</td>
-                <td className="p-2 border dark:border-stone-100 text-center">{formatUnit(product.stock)}</td>
-                <td className="p-2 border dark:border-stone-100 text-center">{product.unit}</td>
+                <td className="p-2 border dark:border-stone-100 text-right">
+                  {product.price}
+                </td>
+                <td className="p-2 border dark:border-stone-100 text-right">
+                  {product.cost}
+                </td>
+                <td className="p-2 border dark:border-stone-100 text-center">
+                  {formatUnit(product.stock)}
+                </td>
+                <td className="p-2 border dark:border-stone-100 text-center">
+                  {product.unit}
+                </td>
                 <td className="p-2 border dark:border-stone-100">
                   <div className="flex items-center justify-center gap-2.5">
                     <button
@@ -203,25 +198,31 @@ function ProductsComponent() {
         </table>
       </div>
 
-      <div className="flex items-center justify-between mt-4 text-sm">
-        <p className="text-stone-600">Page {page}</p>
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleChangePage(page - 1)}
-            disabled={!meta.hasPrevPage}
-            className="py-1 px-3 rounded-md bg-stone-300/50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Prev
-          </button>
-          <button
-            onClick={() => handleChangePage(page + 1)}
-            disabled={!meta.hasNextPage}
-            className="py-1 px-3 rounded-md bg-stone-300/50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      <Pagination
+        page={page}
+        hasPrevPage={meta.hasPrevPage}
+        hasNextPage={meta.hasNextPage}
+        onPrevPage={() => handleChangePage(page - 1)}
+        onNextPage={() => handleChangePage(page + 1)}
+        onPrevPrefetch={() => {
+          prefetch([
+            {
+              queryKey: productKeys.list({ search, page: page - 1, limit }),
+              queryFn: () => getAllProducts({ search, page: page - 1, limit }),
+              staleTime: 1000 * 60 * 5,
+            },
+          ]);
+        }}
+        onNextPrefetch={() => {
+          prefetch([
+            {
+              queryKey: productKeys.list({ search, page: page + 1, limit }),
+              queryFn: () => getAllProducts({ search, page: page + 1, limit }),
+              staleTime: 1000 * 60 * 5,
+            },
+          ]);
+        }}
+      />
 
       {isOpen && selectedProduct && modalType === "edit" && (
         <Modal open={isOpen} onClose={closeModal}>

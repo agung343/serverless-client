@@ -43,26 +43,38 @@ export default function UserNavigation({
             label="Inventory"
             items={[
               { label: "Products", to: `/${tenant}/inventory/products` },
-              { label: "Create Product", to: `/${tenant}/inventory/create-product`},
-              { label: "Category", to: `/${tenant}/inventory/category`},
+              {
+                label: "Create Product",
+                to: `/${tenant}/inventory/create-product`,
+              },
+              { label: "Category", to: `/${tenant}/inventory/category` },
               { label: "Stock", to: `/${tenant}/inventory/stock` },
             ]}
+          />
+          <NavDropDown
+            label="Expenses"
+            items={[
+              { label: "Purchase", to: `/${tenant}/expenses/purchase` },
+              { label: "Operational", to: `/${tenant}/expenses/operational` },
+            ]}
+          />
+          <NavDropDown
+            label="Transaction"
+            items={[{ label: "Sales", to: `/${tenant}/transaction/sales` }]}
           />
           {isAdmin && (
             <Link
               to={`/$tenant/admin`}
               params={{ tenant }}
               className="font-light text-sm lg:text-base"
-              activeProps={{ className: "!font-bold underline text-blue-500/50" }}
+              activeProps={{
+                className: "!font-bold underline text-blue-500/50",
+              }}
               activeOptions={{ exact: true }}
             >
               Staff
             </Link>
           )}
-          <NavDropDown label="Expenses" items={[
-            {label: "Purchase" , to: `/${tenant}/expenses/purchase`},
-            {label: "Operational", to: `/${tenant}/expenses/operational`},
-          ]} />
         </nav>
       </div>
       <div className="flex items-center justify-center gap-2">

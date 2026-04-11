@@ -1,0 +1,208 @@
+import { useState } from "react";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getAllSalesOptions, orderKeys } from "~/orderQueryOption";
+import { OrderQuerySchema } from "~/schema/order.schema";
+import { getAllSales } from "~/api/order";
+import { useDebounceCallback } from "~/hooks/debounce";
+import { usePrefetch } from "~/hooks/usePrefetch";
+import SearchInput from "~/routes/-components/search-input";
+import DateRange from "~/routes/-components/date-range";
+import LimitSelect from "~/routes/-components/limit-select";
+import Pagination from "~/routes/-components/pagination";
+import Modal from "~/routes/-components/modals";
+import SaleDetail from "~/routes/-components/modals/sale-detail";
+import DeleteSale from "~/routes/-components/modals/delete-sale";
+import SalesSummaryTable from "~/routes/-components/tables/sales-summary.table";
+
+type ModalType = "detail" | "edit" | "delete";
+
+export const Route = createFileRoute("/$tenant/transaction/sales/")({
+  validateSearch: OrderQuerySchema,
+  loaderDeps: ({ search }) => search,
+  loader: async ({ context: { queryClient }, deps }) => {
+    return queryClient.ensureQueryData(getAllSalesOptions(deps));
+  },
+  component: SalesPage,
+});
+
+function SalesPage() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [modalType, setModalType] = useState<ModalType | null>(null);
+  const { tenant } = Route.useParams();
+  const { invoice, page, limit, startDate, endDate } = useSearch({
+    from: "/$tenant/transaction/sales/",
+  });
+  const navigate = useNavigate({ from: "/$tenant/transaction/sales/" });
+  const prefetch = usePrefetch();
+
+  const { data } = useSuspenseQuery(
+    getAllSalesOptions({ invoice, page, limit, startDate, endDate })
+  );
+
+  const { sales, meta } = data;
+
+  const debounceInvoice = useDebounceCallback((value: string) => {
+    navigate({
+      search: (prev) => ({ ...prev, invoice: value || undefined, page: 1 }),
+    });
+  });
+
+  function handleChangePage(newPage: number) {
+    navigate({
+      search: (prev) => ({ ...prev, page: newPage }),
+    });
+  }
+
+  function handleChangeLimit(newLimit: number) {
+    navigate({
+      search: (prev) => ({ ...prev, page: 1, limit: newLimit }),
+    });
+  }
+
+  function handleChangeDateRange(startDate?: string, endDate?: string) {
+    navigate({
+      search: (prev) => ({ ...prev, startDate, endDate, page: 1 }),
+    });
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+    setModalType(null);
+    setSelectedOrderId(null);
+  }
+
+  function openDetail(orderId: string) {
+    setIsOpen(true);
+    setModalType("detail");
+    setSelectedOrderId(orderId);
+  }
+
+  function openDelete(orderId: string) {
+    setIsOpen(true);
+    setModalType("delete");
+    setSelectedOrderId(orderId);
+  }
+
+  if (sales.length === 0) {
+    return (
+      <main className="p-4 lg:p-8 min-h-screen">
+        <div className="flex justify-center">
+          <h1 className="text-2xl lg:text-4xl font-bold text-red-500/50">
+            No sales recorded yet!.
+          </h1>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="p-4 lg:p-8 min-h-screen">
+      <div className="flex justify-center my-4">
+        <h1 className="text-2xl: lg:text-4xl font-bold text-red-500/50 dark:text-stone-200">
+          Sales
+        </h1>
+      </div>
+      <div className="flex items-center justify-between text-sm lg:text-base mb-4 md:mb-6">
+        <SearchInput
+          label="Invoice"
+          defaultValue={invoice}
+          onChange={debounceInvoice}
+        />
+        <DateRange
+          startValue={startDate}
+          endValue={endDate}
+          onChange={handleChangeDateRange}
+        />
+        <LimitSelect value={limit} onChange={handleChangeLimit} />
+      </div>
+      <div className="my-4 flex justify-end">
+        <Link
+          to="/$tenant/transaction/sales/archieve"
+          params={{ tenant }}
+          className="text-red-500 font-semibold py-2 px-4 border rounded-md border-red-500 bg-transparent cursor-pointer active:bg-red-500/50"
+        >
+          Achieve
+        </Link>
+      </div>
+      <div className="overflow-auto max-h-150 mt-4 md:mt-6">
+        <SalesSummaryTable
+          sales={sales}
+          onDetail={openDetail}
+          onDelete={openDelete}
+          editable={false}
+          tenant={tenant}
+        />
+      </div>
+      <Pagination
+        page={page}
+        hasNextPage={meta.hasNextPage}
+        onNextPage={() => handleChangePage(page + 1)}
+        hasPrevPage={meta.hasPrevPage}
+        onPrevPage={() => handleChangePage(page - 1)}
+        onNextPrefetch={() => {
+          prefetch([
+            {
+              queryKey: orderKeys.sales({
+                invoice,
+                page: page + 1,
+                limit,
+                startDate,
+                endDate,
+              }),
+              queryFn: () =>
+                getAllSales({
+                  invoice,
+                  page: page + 1,
+                  limit,
+                  startDate,
+                  endDate,
+                }),
+              staleTime: 1000 * 60 * 5,
+            },
+          ]);
+        }}
+        onPrevPrefetch={() => {
+          prefetch([
+            {
+              queryKey: orderKeys.sales({
+                invoice,
+                page: page - 1,
+                limit,
+                startDate,
+                endDate,
+              }),
+              queryFn: () =>
+                getAllSales({
+                  invoice,
+                  page: page - 1,
+                  limit,
+                  startDate,
+                  endDate,
+                }),
+              staleTime: 1000 * 60 * 5,
+            },
+          ]);
+        }}
+      />
+
+      {isOpen && modalType === "detail" && selectedOrderId && (
+        <Modal open={isOpen} onClose={closeModal}>
+          <SaleDetail orderId={selectedOrderId} />
+        </Modal>
+      )}
+
+      {isOpen && modalType === "delete" && selectedOrderId && (
+        <Modal open={isOpen} onClose={closeModal}>
+          <DeleteSale orderId={selectedOrderId} onSuccess={closeModal} />
+        </Modal>
+      )}
+    </main>
+  );
+}
