@@ -5,6 +5,14 @@ export const CreatePurchaseQuerySchema = z.object({
   supplier: z.string().optional(),
 });
 
+export const PurchaseQuerySchema = z.object({
+  invoice: z.string().optional(),
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().max(100).default(25),
+  startDate: z.string().optional(),
+  endDate: z.string().optional()
+})
+
 export const CreatePurchaseSchema = z
   .object({
     invoiceNumber: z.string().min(1, "Invoice is required"),
@@ -49,4 +57,5 @@ export const CreatePurchaseSchema = z
   );
 
 export type CreatePurchaseQuery = z.infer<typeof CreatePurchaseQuerySchema>;
+export type PurchaseQuery = z.infer<typeof PurchaseQuerySchema>
 export type CreatePurchasePayload = z.infer<typeof CreatePurchaseSchema>;

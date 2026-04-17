@@ -10,10 +10,10 @@ import { SupplierQuerySchema } from "~/schema/supplier.schema";
 import { getSuppliers } from "~/api/supplier";
 import { useTableNavigation } from "~/hooks/useTableNavigation";
 import { usePrefetch } from "~/hooks/usePrefetch";
-import SearchInput from "~/routes/-components/search-input";
-import LimitSelect from "~/routes/-components/limit-select";
+import SearchInput from "~/routes/-components/ui/search-input";
+import LimitSelect from "~/routes/-components/ui/limit-select";
 import SuppliersTable from "~/routes/-components/tables/supplier-table";
-import Pagination from "~/routes/-components/pagination";
+import Pagination from "~/routes/-components/ui/pagination";
 import Modal from "~/routes/-components/modals";
 import SupplierForm from "~/routes/-components/forms/supplier.form";
 

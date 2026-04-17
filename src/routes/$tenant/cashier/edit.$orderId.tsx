@@ -19,13 +19,13 @@ import { orderKeys, orderDetailOptions } from "~/queries/orderQueryOption";
 import { useDebounceCallback } from "~/hooks/debounce";
 import { formatRupiah } from "~/lib/rupiah_currency";
 import type { OrderItems } from "~/lib/order";
-import CashierList from "~/routes/-components/ui/cashier-list";
-import CashierProducts from "~/routes/-components/ui/cashier-products";
+import CashierList from "~/routes/-components/cashier/cashier-list";
+import CashierProducts from "~/routes/-components/cashier/cashier-products";
 import CashierPayment, {
   type PaymentMethods,
-} from "~/routes/-components/ui/cashier-payment";
+} from "~/routes/-components/cashier/cashier-payment";
 import PaymentField from "~/routes/-components/modals/payment-field";
-import CashierPrinter from "~/routes/-components/cashier-printer";
+import CashierPrinter from "~/routes/-components/cashier/cashier-printer";
 import Modal from "~/routes/-components/modals";
 
 export const Route = createFileRoute("/$tenant/cashier/edit/$orderId")({

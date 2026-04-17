@@ -8,7 +8,7 @@ import {
 import { categoriesQueryOptions } from "~/queries/categoryQueryOption";
 import { createNewProduct } from "~/api/product";
 import Modal from "../../-components/modals";
-import AddCategoryForm from "../../-components/forms/add-category.form";
+import AddCategoryForm from "../../-components/inventory/add-category.form";
 import { CreateProductSchema } from "~/schema/product.schema";
 import { z } from "zod";
 

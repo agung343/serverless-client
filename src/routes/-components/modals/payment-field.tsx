@@ -1,4 +1,4 @@
-import type { PaymentMethods } from "../ui/cashier-payment";
+import type { PaymentMethods } from "../cashier/cashier-payment";
 import { formatRupiah } from "~/lib/rupiah_currency";
 
 interface PaymentFieldProps {

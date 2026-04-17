@@ -10,14 +10,14 @@ import { getAllProducts, getProductDetail, type Product } from "~/api/product";
 import { productKeys } from "~/queries/productQueryOptions";
 import { useDebounceCallback } from "~/hooks/debounce";
 import Modal from "../../-components/modals";
-import EditProductForm from "../../-components/forms/edit-product.form";
+import EditProductForm from "../../-components/inventory/edit-product.form";
 import AdjustForm from "~/routes/-components/forms/adjust-stock";
-import Pagination from "~/routes/-components/pagination";
+import Pagination from "~/routes/-components/ui/pagination";
 import { PaginationProductSchema } from "~/schema/product.schema";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import { formatUnit } from "~/lib/unit";
-import SearchInput from "~/routes/-components/search-input";
-import LimitSelect from "~/routes/-components/limit-select";
+import SearchInput from "~/routes/-components/ui/search-input";
+import LimitSelect from "~/routes/-components/ui/limit-select";
 
 export const Route = createFileRoute("/$tenant/inventory/products")({
   validateSearch: PaginationProductSchema,

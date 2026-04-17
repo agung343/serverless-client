@@ -11,12 +11,12 @@ import { getOrdersTodays } from "~/api/order";
 import { useDebounceCallback } from "~/hooks/debounce";
 import { usePrefetch } from "~/hooks/usePrefetch";
 
-import SearchInput from "../../-components/search-input";
-import LimitSelect from "../../-components/limit-select";
+import SearchInput from "~/routes/-components/ui/search-input";
+import LimitSelect from "~/routes/-components/ui/limit-select";
 import Modal from "~/routes/-components/modals";
 import SalesSummaryTable from "~/routes/-components/tables/sales-summary.table";
 import SaleDetail from "~/routes/-components/modals/sale-detail";
-import Pagination from "~/routes/-components/pagination";
+import Pagination from "~/routes/-components/ui/pagination";
 
 type ModalType = "detail" | "edit" | "delete";
 

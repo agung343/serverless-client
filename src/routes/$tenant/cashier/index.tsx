@@ -10,14 +10,14 @@ import { ProductCashierQuerySchema } from "~/schema/product.schema";
 import { CreateOrderSchema } from "~/schema/order.schema";
 import { productCashierQueryOptions } from "~/queries/productQueryOptions";
 import { orderKeys } from "~/queries/orderQueryOption";
-import CashierList from "~/routes/-components/ui/cashier-list";
-import CashierProducts from "~/routes/-components/ui/cashier-products";
+import CashierList from "~/routes/-components/cashier/cashier-list";
+import CashierProducts from "~/routes/-components/cashier/cashier-products";
 import CashierPayment, {
   type PaymentMethods,
-} from "~/routes/-components/ui/cashier-payment";
+} from "~/routes/-components/cashier/cashier-payment";
 import Modal from "../../-components/modals";
 import PaymentField from "~/routes/-components/modals/payment-field";
-import CashierPrinter from "../../-components/cashier-printer";
+import CashierPrinter from "~/routes/-components/cashier/cashier-printer";
 import type { OrderItems } from "~/lib/order";
 
 const STORAGE_KEY = "current_order";
