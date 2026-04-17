@@ -21,9 +21,9 @@ import {
 } from "~/schema/purchase.schema";
 import type { PurchaseItems } from "~/lib/purchase";
 import { formatRupiah } from "~/lib/rupiah_currency";
-import PurchaseList from "~/routes/-components/ui/purchase-list";
-import PurchaseProducts from "~/routes/-components/ui/purchase-products";
-import PurchasePayment from "~/routes/-components/ui/purchase-payment";
+import PurchaseList from "~/routes/-components/purchase/purchase-list";
+import PurchaseProducts from "~/routes/-components/purchase/purchase-products";
+import PurchasePayment from "~/routes/-components/purchase/purchase-payment";
 
 export const Route = createFileRoute("/$tenant/expenses/purchase")({
   validateSearch: CreatePurchaseQuerySchema,

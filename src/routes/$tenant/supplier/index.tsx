@@ -12,7 +12,7 @@ import { useTableNavigation } from "~/hooks/useTableNavigation";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import SearchInput from "~/routes/-components/ui/search-input";
 import LimitSelect from "~/routes/-components/ui/limit-select";
-import SuppliersTable from "~/routes/-components/tables/supplier-table";
+import SuppliersTable from "~/routes/-components/supplier/supplier-table";
 import Pagination from "~/routes/-components/ui/pagination";
 import Modal from "~/routes/-components/modals";
 import SupplierForm from "~/routes/-components/forms/supplier.form";

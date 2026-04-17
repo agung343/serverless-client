@@ -8,8 +8,8 @@ import {
 import { usersQueryOptions } from "../../queries/usersQueryOptions";
 import { deleteUser, type User } from "../../api/users";
 import Modal from "../-components/modals";
-import AddStaffForm from "../-components/forms/add-staff.form";
-import EditStaffForm from "../-components/forms/edit-staff.form";
+import AddStaffForm from "../-components/staff/add-staff.form";
+import EditStaffForm from "../-components/staff/edit-staff.form";
 
 type ModalType = "edit" | "delete" | "add" | null;
 

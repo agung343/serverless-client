@@ -6,7 +6,7 @@ import { createPurchase } from "~/api/purchase";
 import { CreatePurchaseSchema } from "~/schema/purchase.schema";
 import { purchaseKeys } from "~/queries/purchaseQueryOptions";
 import type { PurchaseItems } from "~/lib/purchase";
-import SupplierSelect from "./supplier-select";
+import SupplierSelect from "../supplier/supplier-select";
 
 interface PaymentProps {
     items: PurchaseItems[]
