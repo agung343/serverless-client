@@ -4,7 +4,7 @@ import {
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
-import { stockQueryOptions } from "~/productQueryOptions";
+import { stockQueryOptions } from "~/queries/productQueryOptions";
 import { StockQuerySchema } from "~/schema/stock.schema";
 import { useDebounceCallback } from "~/hooks/debounce";
 import { formatUnit } from "~/lib/unit";

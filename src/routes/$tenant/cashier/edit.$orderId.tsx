@@ -14,9 +14,11 @@ import {
 import { editOrder } from "~/api/order";
 import { ProductCashierQuerySchema } from "~/schema/product.schema";
 import { EditOrderSchema, type EditOrderPayload } from "~/schema/order.schema";
-import { productCashierQueryOptions } from "~/productQueryOptions";
-import { orderKeys, orderDetailOptions } from "~/orderQueryOption";
+import { productCashierQueryOptions } from "~/queries/productQueryOptions";
+import { orderKeys, orderDetailOptions } from "~/queries/orderQueryOption";
+import { useDebounceCallback } from "~/hooks/debounce";
 import { formatRupiah } from "~/lib/rupiah_currency";
+import type { OrderItems } from "~/lib/order";
 import CashierList from "~/routes/-components/ui/cashier-list";
 import CashierProducts from "~/routes/-components/ui/cashier-products";
 import CashierPayment, {
@@ -25,7 +27,6 @@ import CashierPayment, {
 import PaymentField from "~/routes/-components/modals/payment-field";
 import CashierPrinter from "~/routes/-components/cashier-printer";
 import Modal from "~/routes/-components/modals";
-import type { OrderItems } from ".";
 
 export const Route = createFileRoute("/$tenant/cashier/edit/$orderId")({
   validateSearch: ProductCashierQuerySchema,
@@ -53,6 +54,11 @@ function EditCashier() {
   const queryClient = useQueryClient();
   const { search } = useSearch({ from: "/$tenant/cashier/edit/$orderId" });
   const navigate = useNavigate({ from: "/$tenant/cashier/edit/$orderId" });
+  const debounceSearch = useDebounceCallback((value: string) => {
+    navigate({
+      search: (prev) => ({...prev, search: value || undefined})
+    })
+  })
 
   const { data: catalog } = useSuspenseQuery(
     productCashierQueryOptions({ search })
@@ -69,12 +75,6 @@ function EditCashier() {
     unitPrice: Number(item.unitPrice),
   }));
   const [items, setItems] = useState<OrderItems[]>(existedItems);
-
-  const debounceSearch = (value: string) => {
-    navigate({
-      search: (prev) => ({ ...prev, search: value || undefined }),
-    });
-  };
 
   function handleAddClick() {
     if (!selectedProduct) return;

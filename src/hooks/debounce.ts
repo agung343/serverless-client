@@ -5,6 +5,8 @@ export function useDebounceCallback<T extends (...args: any[]) => void>(
   delay: number = 500
 ) {
     const time = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const callbackRef = useRef(callback)
+    callbackRef.current = callback
 
     return useCallback((...args: Parameters<T>) => {
         if (time.current) {
@@ -12,7 +14,7 @@ export function useDebounceCallback<T extends (...args: any[]) => void>(
         }
 
         time.current = setTimeout(() => {
-            callback(...args)
+            callbackRef.current(...args)
         }, delay)
     }, [callback, delay])
 }

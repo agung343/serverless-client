@@ -6,8 +6,8 @@ import {
 } from "@tanstack/react-query";
 import { z } from "zod";
 import { adjustStock } from "~/api/stock";
-import { productKeys } from "~/productQueryOptions";
-import { productDetailsQueryOptions } from "~/productQueryOptions";
+import { productKeys } from "~/queries/productQueryOptions";
+import { productDetailsQueryOptions } from "~/queries/productQueryOptions";
 import {
   AdjustStockSchema,
   type AdjustStockPayload,

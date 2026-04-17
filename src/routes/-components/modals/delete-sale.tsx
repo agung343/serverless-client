@@ -6,7 +6,7 @@ import {
   type DeleteOrderPayload,
 } from "~/schema/order.schema";
 import { archieveSale } from "~/api/order";
-import { orderKeys } from "~/orderQueryOption";
+import { orderKeys } from "~/queries/orderQueryOption";
 
 interface DeleteSaleProps {
   orderId: string;

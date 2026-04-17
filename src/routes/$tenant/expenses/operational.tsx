@@ -5,7 +5,7 @@ import {
   useSearch,
 } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { operationalExpensesQueryOptions } from "~/expensesQueryOptions";
+import { operationalExpensesQueryOptions } from "~/queries/expensesQueryOptions";
 import { PaginationExpenseQuery } from "~/schema/expense.schema";
 import { useDebounceCallback } from "~/hooks/debounce";
 import { dateSummary } from "~/lib/date";

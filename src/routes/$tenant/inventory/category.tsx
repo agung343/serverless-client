@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { categoriesQueryOptions } from "~/categoryQueryOption";
+import { categoriesQueryOptions } from "~/queries/categoryQueryOption";
 import { createNewCategory } from "~/api/category";
 import { CreateNewCategorySchema } from "~/schema/product.schema";
 

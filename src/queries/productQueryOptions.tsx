@@ -1,8 +1,8 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { getAllProducts, getProductDetail, getProductsCashier } from "./api/product";
-import { getStockMovement } from "./api/stock";
-import type { ProductQuery, ProductCashierQuery } from "./schema/product.schema";
-import { StockQuery } from "./schema/stock.schema";
+import { getAllProducts, getProductDetail, getProductsCashier } from "../api/product";
+import { getStockMovement } from "../api/stock";
+import type { ProductQuery, ProductCashierQuery } from "../schema/product.schema";
+import { StockQuery } from "../schema/stock.schema";
 
 
 export const productKeys = {

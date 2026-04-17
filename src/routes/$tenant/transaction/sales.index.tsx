@@ -6,10 +6,10 @@ import {
   useSearch,
 } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getAllSalesOptions, orderKeys } from "~/orderQueryOption";
+import { getAllSalesOptions, orderKeys } from "~/queries/orderQueryOption";
 import { OrderQuerySchema } from "~/schema/order.schema";
 import { getAllSales } from "~/api/order";
-import { useDebounceCallback } from "~/hooks/debounce";
+import { useTableNavigation } from "~/hooks/useTableNavigation";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import SearchInput from "~/routes/-components/search-input";
 import DateRange from "~/routes/-components/date-range";
@@ -39,7 +39,6 @@ function SalesPage() {
   const { invoice, page, limit, startDate, endDate } = useSearch({
     from: "/$tenant/transaction/sales/",
   });
-  const navigate = useNavigate({ from: "/$tenant/transaction/sales/" });
   const prefetch = usePrefetch();
 
   const { data } = useSuspenseQuery(
@@ -48,29 +47,9 @@ function SalesPage() {
 
   const { sales, meta } = data;
 
-  const debounceInvoice = useDebounceCallback((value: string) => {
-    navigate({
-      search: (prev) => ({ ...prev, invoice: value || undefined, page: 1 }),
-    });
-  });
-
-  function handleChangePage(newPage: number) {
-    navigate({
-      search: (prev) => ({ ...prev, page: newPage }),
-    });
-  }
-
-  function handleChangeLimit(newLimit: number) {
-    navigate({
-      search: (prev) => ({ ...prev, page: 1, limit: newLimit }),
-    });
-  }
-
-  function handleChangeDateRange(startDate?: string, endDate?: string) {
-    navigate({
-      search: (prev) => ({ ...prev, startDate, endDate, page: 1 }),
-    });
-  }
+  const { setSearch, setPage, setLimit, setDateRange } = useTableNavigation(
+    Route.fullPath
+  );
 
   function closeModal() {
     setIsOpen(false);
@@ -93,10 +72,32 @@ function SalesPage() {
   if (sales.length === 0) {
     return (
       <main className="p-4 lg:p-8 min-h-screen">
-        <div className="flex justify-center">
+        <div className="flex justify-center my-4">
           <h1 className="text-2xl lg:text-4xl font-bold text-red-500/50">
             No sales recorded yet!.
           </h1>
+        </div>
+        <div className="flex items-center justify-between text-sm lg:text-base mb-4 md:mb-6">
+          <SearchInput
+            label="Invoice"
+            defaultValue={invoice}
+            onChange={(value) => setSearch("invoice", value)}
+          />
+          <DateRange
+            startValue={startDate}
+            endValue={endDate}
+            onChange={(start, end) => setDateRange(start, end)}
+          />
+          <LimitSelect value={limit} onChange={(limit) => setLimit(limit)} />
+        </div>
+        <div className="my-4 flex justify-end">
+          <Link
+            to="/$tenant/transaction/sales/archieve"
+            params={{ tenant }}
+            className="text-red-500 font-semibold py-2 px-4 border rounded-md border-red-500 bg-transparent cursor-pointer active:bg-red-500/50"
+          >
+            Achieve
+          </Link>
         </div>
       </main>
     );
@@ -113,14 +114,14 @@ function SalesPage() {
         <SearchInput
           label="Invoice"
           defaultValue={invoice}
-          onChange={debounceInvoice}
+          onChange={(value) => setSearch("invoice", value)}
         />
         <DateRange
           startValue={startDate}
           endValue={endDate}
-          onChange={handleChangeDateRange}
+          onChange={(start, end) => setDateRange(start, end)}
         />
-        <LimitSelect value={limit} onChange={handleChangeLimit} />
+        <LimitSelect value={limit} onChange={(limit) => setLimit(limit)} />
       </div>
       <div className="my-4 flex justify-end">
         <Link
@@ -143,9 +144,9 @@ function SalesPage() {
       <Pagination
         page={page}
         hasNextPage={meta.hasNextPage}
-        onNextPage={() => handleChangePage(page + 1)}
+        onNextPage={() => setPage(page + 1)}
         hasPrevPage={meta.hasPrevPage}
-        onPrevPage={() => handleChangePage(page - 1)}
+        onPrevPage={() => setPage(page - 1)}
         onNextPrefetch={() => {
           prefetch([
             {

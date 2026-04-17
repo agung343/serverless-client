@@ -2,16 +2,27 @@ import { forwardRef } from "react";
 import { useParams } from "@tanstack/react-router";
 import type { OrderDetailsReturn } from "~/api/order";
 import { dateTransaction } from "~/lib/date";
-import { formatUnit } from "~/lib/unit";
 import { formatRupiah } from "~/lib/rupiah_currency";
 
+
 interface Props {
-  sale: OrderDetailsReturn;
+  sale: {
+    invoice: string
+    paid: string,
+    totalAmount: string
+    date: string
+    paymentType: string
+    items: {
+      productId: string
+      name: string
+      quantity: number
+      unitPrice: string
+    }[]
+  };
 }
 
 const CashierPrinter = forwardRef<HTMLDivElement, Props>(({ sale }, ref) => {
   const { tenant } = useParams({ from: "/$tenant" });
-
   const change = Number(sale.paid) - Number(sale.totalAmount);
   return (
     <div
@@ -54,7 +65,7 @@ const CashierPrinter = forwardRef<HTMLDivElement, Props>(({ sale }, ref) => {
           <span>{formatRupiah(Number(sale.totalAmount))}</span>
         </div>
         <div className="flex justify-between font-semibold">
-          <span className="text-gray-500">{sale.payment}</span>
+          <span className="text-gray-500">{sale.paymentType}</span>
           <span>{formatRupiah(Number(sale.paid))}</span>
         </div>
         <div className="flex justify-between font-semibold">

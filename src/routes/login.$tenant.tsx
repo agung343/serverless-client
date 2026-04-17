@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ErrorComponentProps } from "@tanstack/react-router";
-import { authQueryOptions } from "~/authQueryOption";
+import { authQueryOptions } from "~/queries/authQueryOption";
 import { login, getTenant } from "~/api/auth";
 
 export const Route = createFileRoute("/login/$tenant")({

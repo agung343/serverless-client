@@ -5,9 +5,9 @@ import {
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
-import { productQueryOptions } from "~/productQueryOptions";
+import { productQueryOptions } from "~/queries/productQueryOptions";
 import { getAllProducts, getProductDetail, type Product } from "~/api/product";
-import { productKeys } from "~/productQueryOptions";
+import { productKeys } from "~/queries/productQueryOptions";
 import { useDebounceCallback } from "~/hooks/debounce";
 import Modal from "../../-components/modals";
 import EditProductForm from "../../-components/forms/edit-product.form";

@@ -3,8 +3,8 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { productDetailsQueryOptions } from "~/productQueryOptions";
-import { categoriesQueryOptions } from "~/categoryQueryOption";
+import { productDetailsQueryOptions } from "~/queries/productQueryOptions";
+import { categoriesQueryOptions } from "~/queries/categoryQueryOption";
 import { updateProduct } from "~/api/product";
 import { type UpdateProductPayload } from "~/schema/product.schema";
 

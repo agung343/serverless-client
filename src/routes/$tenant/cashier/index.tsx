@@ -1,22 +1,15 @@
 import { useState, useMemo, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { z } from "zod";
-import {
-  createFileRoute,
-  useSearch,
-  useNavigate,
-} from "@tanstack/react-router";
-import {
-  useSuspenseQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { createFileRoute, useSearch, useNavigate } from "@tanstack/react-router";
+import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrderCashier } from "~/api/order";
 import { formatRupiah } from "~/lib/rupiah_currency";
+import { useDebounceCallback } from "~/hooks/debounce";
 import { ProductCashierQuerySchema } from "~/schema/product.schema";
 import { CreateOrderSchema } from "~/schema/order.schema";
-import { productCashierQueryOptions } from "~/productQueryOptions";
-import { orderKeys } from "~/orderQueryOption";
+import { productCashierQueryOptions } from "~/queries/productQueryOptions";
+import { orderKeys } from "~/queries/orderQueryOption";
 import CashierList from "~/routes/-components/ui/cashier-list";
 import CashierProducts from "~/routes/-components/ui/cashier-products";
 import CashierPayment, {
@@ -25,13 +18,7 @@ import CashierPayment, {
 import Modal from "../../-components/modals";
 import PaymentField from "~/routes/-components/modals/payment-field";
 import CashierPrinter from "../../-components/cashier-printer";
-
-export type OrderItems = {
-  productId: string;
-  name: string;
-  quantity: number;
-  unitPrice: number;
-};
+import type { OrderItems } from "~/lib/order";
 
 const STORAGE_KEY = "current_order";
 
@@ -65,17 +52,17 @@ function RouteComponent() {
 
   const queryClient = useQueryClient();
   const { search } = useSearch({ from: "/$tenant/cashier/" });
-  const navigate = useNavigate({ from: "/$tenant/cashier/" });
+  
+  const navigate = useNavigate({from: "/$tenant/cashier/"})
+  const debounceSearch = useDebounceCallback((value: string) => {
+    navigate({
+      search: (prev) => ({...prev, search: value || undefined})
+    })
+  },100)
 
   const { data } = useSuspenseQuery(productCashierQueryOptions({ search }));
 
   const results = data.products || [];
-
-  const debounceSearch = (value: string) => {
-    navigate({
-      search: (prev) => ({ ...prev, search: value || undefined }),
-    });
-  };
 
   function handleAddClick() {
     if (!selectedProduct) return;
@@ -174,7 +161,7 @@ function RouteComponent() {
     <main className="w-full p-4 lg:p-6 bg-zinc-100">
       <div className="grid grid-cols-[35%_1fr] gap-4 h-[80vh]">
         <div className="flex flex-col gap-4 bg-blue-800/50 h-full rounded-md">
-          <h1 className="text-xl lg:text-2xl font-bold p-4 bg-gray-200">
+          <h1 className="text-xl lg:text-2xl font-bold p-4 bg-gray-200 dark:text-stone-800">
             Current Order:
           </h1>
           <CashierList
@@ -186,7 +173,7 @@ function RouteComponent() {
             }}
           />
           <div className="p-4 bg-gray-200">
-            <h2 className="text-xl font-bold text-right">
+            <h2 className="text-xl font-bold text-right dark:text-neutral-800">
               Total: {formatRupiah(totalAmount)}
             </h2>
           </div>

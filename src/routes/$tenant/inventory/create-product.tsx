@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { categoriesQueryOptions } from "~/categoryQueryOption";
+import { categoriesQueryOptions } from "~/queries/categoryQueryOption";
 import { createNewProduct } from "~/api/product";
 import Modal from "../../-components/modals";
 import AddCategoryForm from "../../-components/forms/add-category.form";

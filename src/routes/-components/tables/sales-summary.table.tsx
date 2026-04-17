@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { getOrderDetails, type Sale } from "~/api/order";
-import { orderKeys } from "~/orderQueryOption";
+import { orderKeys } from "~/queries/orderQueryOption";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import { formatRupiah } from "~/lib/rupiah_currency";
 import { dateTransaction } from "~/lib/date";

@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { getAllSales, getOrdersTodays, getOrderDetails, Order, getSalesArchieve } from "./api/order";
-import type { OrderQuery } from "./schema/order.schema";
+import { getAllSales, getOrdersTodays, getOrderDetails, Order, getSalesArchieve } from "../api/order";
+import type { OrderQuery } from "../schema/order.schema";
 
 export const orderKeys = {
     all: ["orders"] as const,

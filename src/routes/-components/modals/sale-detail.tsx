@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { orderKeys, orderDetailOptions } from "~/orderQueryOption";
+import { orderKeys, orderDetailOptions } from "~/queries/orderQueryOption";
 import { type OrderDetailsReturn } from "~/api/order";
 import { dateTransaction } from "~/lib/date";
 import { formatUnit } from "~/lib/unit";

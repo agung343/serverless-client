@@ -62,6 +62,14 @@ export default function UserNavigation({
             label="Transaction"
             items={[{ label: "Sales", to: `/${tenant}/transaction/sales` }]}
           />
+          <Link
+            to={"/$tenant/supplier"}
+            params={{ tenant }}
+            className="font-light text-sm lg:text-base"
+            activeProps={{ className: "!font-bold underline text-blue-500/50" }}
+          >
+            Supplier
+          </Link>
           {isAdmin && (
             <Link
               to={`/$tenant/admin`}

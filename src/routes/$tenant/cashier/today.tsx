@@ -5,7 +5,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { orderCashierTodayOptions, orderKeys } from "~/orderQueryOption";
+import { orderCashierTodayOptions, orderKeys } from "~/queries/orderQueryOption";
 import { OrderQuerySchema } from "~/schema/order.schema";
 import { getOrdersTodays } from "~/api/order";
 import { useDebounceCallback } from "~/hooks/debounce";
