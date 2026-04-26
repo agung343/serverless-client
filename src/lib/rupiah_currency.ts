@@ -1,5 +1,5 @@
 export function formatRupiah(text: string | number): string {
-    const amount = typeof text === "number" ? text : parseFloat(text.replace(/[0-9.-]+/g, ""))
+    const amount = typeof text === "string" ? Number(text.replace(/, /g, "").trim()) : text
     if (isNaN(amount)) {
         return "Rp. 0"
     }

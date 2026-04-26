@@ -10,22 +10,26 @@ export const PurchaseQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().max(100).default(25),
   startDate: z.string().optional(),
-  endDate: z.string().optional()
-})
+  endDate: z.string().optional(),
+});
 
 export const CreatePurchaseSchema = z
   .object({
     invoiceNumber: z.string().min(1, "Invoice is required"),
-    date: z.string(),
+    date: z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message:  "Invalid date format"
+    }),
     notes: z.string().optional(),
     supplierId: z.string().min(1, "Supplier is required"),
     totalAmount: z.coerce
       .number("Must be a  number")
       .nonnegative("Total Amount must be positive"),
-    paid: z.coerce
-      .number("Must be a number")
-      .nonnegative("Paid amount must be a non-negative number")
-      .default(0),
+    paid: z.preprocess(
+      (val) => (val === "" ? undefined : val),
+      z.coerce
+        .number("Must be a number")
+        .nonnegative("Paid amount must be a non-negative number")
+    ),
     addToStock: z
       .preprocess((val) => val === "true" || val === true, z.boolean())
       .default(false),
@@ -40,22 +44,27 @@ export const CreatePurchaseSchema = z
           .number("Must be a number")
           .int()
           .positive("Unit ID must be a positive integer"),
-        unitPrice: z.coerce
+        unitCost: z.coerce
           .number("Must be a number")
           .nonnegative("Unit price must be a non-negative number"),
       })
-    ),
+    ).min(1, "At least one item is required"),
   })
   .refine(
     (data) =>
       data.paid <=
-      data.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0),
+      data.items.reduce((sum, item) => sum + item.quantity * item.unitCost, 0),
     {
       message: "Paid amount cannot exceed total amount calculated from items",
       path: ["paid"],
     }
   );
 
+export const ArchievePurchaseSchema = z.object({
+  notes: z.string().min(1, "Notes is required")
+})
+
 export type CreatePurchaseQuery = z.infer<typeof CreatePurchaseQuerySchema>;
-export type PurchaseQuery = z.infer<typeof PurchaseQuerySchema>
+export type PurchaseQuery = z.infer<typeof PurchaseQuerySchema>;
 export type CreatePurchasePayload = z.infer<typeof CreatePurchaseSchema>;
+export type ArchievePurchasePayload = z.infer<typeof ArchievePurchaseSchema>

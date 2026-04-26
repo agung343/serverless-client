@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "../lib/error";
+import { toApiError } from "~/lib/error";
 
 export type CategoryReturn = {
   categories: {
@@ -10,13 +10,6 @@ export type CategoryReturn = {
 
 export type CreateCategoryPayload = {
   name: string;
-};
-
-const toApiError = (error: any): ApiError => {
-  const message = error.data?.message || "Something went wrong";
-  const status = error.status || 500;
-  const details = error.data?.details;
-  return new ApiError(message, status, details);
 };
 
 export const getCategories = async () => {

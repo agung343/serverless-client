@@ -1,10 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { supplierSelectQueryOption } from "~/queries/supplierQueryOptions";
+interface Props {
+    suppliers: {
+        id: string
+        name: string
+    }[]
+}
 
-export default function SupplierSelect() {
-    const {data} = useSuspenseQuery(supplierSelectQueryOption())
-    const suppliers = data.suppliers || []
-
+export default function SupplierSelect({suppliers}: Props) {
     return (<>
         <select name="supplier" className="text-sm lg:text-base py-1.5 px-2.5 rounded-md border border-neutral-300/50">
             {suppliers.map(sup => (

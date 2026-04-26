@@ -60,7 +60,10 @@ export default function UserNavigation({
           />
           <NavDropDown
             label="Transaction"
-            items={[{ label: "Sales", to: `/${tenant}/transaction/sales` }]}
+            items={[
+              { label: "Sales", to: `/${tenant}/transaction/sales` },
+              { label: "Purchases", to:`/${tenant}/transaction/purchases/`}
+            ]}
           />
           <Link
             to={"/$tenant/supplier"}

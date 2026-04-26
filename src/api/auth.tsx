@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "../lib/error";
+import { toApiError } from "~/lib/error";
 
 export class AuthError extends Error {}
 
@@ -17,13 +17,6 @@ export type UserReturn = {
     role: "OWNER" | "ADMIN" | "STAFF";
   };
 };
-
-const toApiError = (error:any): ApiError => {
-  const message = error.data?.message || "Something went wrong";
-  const status = error.status || 500;
-  const details = error.data?.details;
-  return new ApiError(message, status, details)
-}
 
 export const getTenant = async (tenant: string) => {
   try {

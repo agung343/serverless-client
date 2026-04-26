@@ -1,24 +1,8 @@
 import { useState, useMemo } from "react";
-import {
-  createFileRoute,
-  useNavigate,
-  useSearch,
-} from "@tanstack/react-router";
-import {
-  useSuspenseQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { z } from "zod";
-import {
-  FindSupplierAndProductsOption,
-  purchaseKeys,
-} from "~/queries/purchaseQueryOptions";
-import { createPurchase } from "~/api/purchase";
-import {
-  CreatePurchaseQuerySchema,
-  CreatePurchaseSchema,
-} from "~/schema/purchase.schema";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { FindSupplierAndProductsOption } from "~/queries/purchaseQueryOptions";
+import { CreatePurchaseQuerySchema } from "~/schema/purchase.schema";
 import type { PurchaseItems } from "~/lib/purchase";
 import { formatRupiah } from "~/lib/rupiah_currency";
 import PurchaseList from "~/routes/-components/purchase/purchase-list";
@@ -37,17 +21,14 @@ export const Route = createFileRoute("/$tenant/expenses/purchase")({
 const STORAGE_KEY = "purchase-order";
 
 function ExpensePurchase() {
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [items, setItems] = useState<PurchaseItems[]>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : [];
   });
 
-  const queryClient = useQueryClient();
   const { product, supplier } = useSearch({
     from: "/$tenant/expenses/purchase",
   });
-  const navigate = useNavigate({ from: "/$tenant/expenses/purchase" });
 
   const { data } = useSuspenseQuery(
     FindSupplierAndProductsOption({ product, supplier })
@@ -56,23 +37,11 @@ function ExpensePurchase() {
   const { products, suppliers } = data;
   const results = products || [];
 
-  const debounceSearchProduct = (value: string) => {
-    navigate({
-      search: (prev) => ({ ...prev, product: value || undefined }),
-    });
-  };
-
-  const debounceSearchSupplier = (value: string) => {
-    navigate({
-      search: (prev) => ({ ...prev, supplier: value || undefined }),
-    });
-  };
-
   function handleAddClick(newItem: PurchaseItems) {
     setItems((prev) => {
-      const updated = [...prev, newItem]
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      return updated
+      const updated = [...prev, newItem];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
     });
   }
 
@@ -85,19 +54,20 @@ function ExpensePurchase() {
   }
 
   function clearItems() {
-    setItems([])
+    setItems([]);
   }
 
   const totalAmount = useMemo(() => {
     return items.reduce((sum, item) => sum + item.quantity * item.cost, 0);
   }, [items]);
 
+  console.log(items);
   return (
     <>
       <main className="w-full p-4 lg:p-6 bg-zinc-100">
         <div className="grid grid-cols-[30%_37%_30%] gap-4 h-[80vh]">
           <div className="flex flex-col bg-blue-800/50 h-full rounded-md">
-            <h1 className="text-xl lg:text-2xl font-bold p-4 bg-gray-200">
+            <h1 className="text-xl lg:text-2xl font-bold p-4 bg-gray-200 dark:text-stone-800">
               Purchase Items:
             </h1>
             <PurchaseList items={items} onDeleteItem={handleDeleteItem} />
@@ -108,7 +78,11 @@ function ExpensePurchase() {
             </div>
           </div>
           <PurchaseProducts products={results} onAddItem={handleAddClick} />
-          <PurchasePayment items={items} onSuccess={clearItems} />
+          <PurchasePayment
+            items={items}
+            suppliers={suppliers}
+            onSuccess={clearItems}
+          />
         </div>
       </main>
     </>

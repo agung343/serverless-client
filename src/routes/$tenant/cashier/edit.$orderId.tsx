@@ -136,6 +136,11 @@ function EditCashier() {
       queryClient.invalidateQueries({ queryKey: orderKeys.all });
       closeModal();
     },
+    onError: (data:any) => {
+      if (data.message) {
+        alert(data.message)
+      }
+    }
   });
 
   function handleSubmit(e: React.SubmitEvent) {

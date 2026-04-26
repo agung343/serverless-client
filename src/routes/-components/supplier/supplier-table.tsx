@@ -1,15 +1,17 @@
 import { type Supplier, getSupplierDetail } from "~/api/supplier";
 import { supplierKeys } from "~/queries/supplierQueryOptions";
 import { usePrefetch } from "~/hooks/usePrefetch";
+import { Link } from "@tanstack/react-router";
 
 interface TableProps {
   suppliers: Supplier[];
   onEdit: (id: string) => void
   onDelete: (id: string) => void
+  tenant: string
 }
 
-export default function SuppliersTable({ suppliers, onEdit, onDelete }: TableProps) {
-  const prefetch = usePrefetch()
+export default function SuppliersTable({ suppliers, onEdit, onDelete, tenant }: TableProps) {
+  const prefetch = usePrefetch();
   const tableHeadClasses =
     "p-2 border dark:border-stone-100 font-semibold text-center";
   const tableRowsClasses = "p-2 border dark:border-stone-100";
@@ -41,22 +43,41 @@ export default function SuppliersTable({ suppliers, onEdit, onDelete }: TablePro
               {supp.notes ?? <span className="italic">Nothing yet</span>}
             </td>
             <td className={`${tableRowsClasses}`}>
-                <div className="flex items-center justify-center gap-2.5">
-                    <button onClick={() => onEdit(supp.id) } onMouseEnter={() => {
-                      prefetch([
-                        {
-                          queryKey: supplierKeys.detail(supp.id),
-                          queryFn: () => getSupplierDetail(supp.id),
-                          staleTime: 1000 * 60 * 5
-                        }
-                      ])
-                    }} className="bg-gray-300/50 py-1.5 px-2.5 rounded-md text-sm active:bg-gray-300 hover:bg-gray-300 hover:cursor-pointer">
-                        View/Edit
-                    </button>
-                    <button onClick={() => onDelete(supp.id)} className="bg-red-500/50 text-gray-100 py-1.5 px-2.5 rounded-md text-sm active:bg-red-500 hover:bg-red-500 hover:cursor-pointer">
-                        Delete
-                    </button>
-                </div>
+              <div className="flex items-center justify-center gap-2.5">
+                <button
+                  onClick={() => onEdit(supp.id)}
+                  onMouseEnter={() => {
+                    prefetch([
+                      {
+                        queryKey: supplierKeys.detail(supp.id),
+                        queryFn: () => getSupplierDetail(supp.id),
+                        staleTime: 1000 * 60 * 5,
+                      },
+                    ]);
+                  }}
+                  className="bg-gray-300/50 py-1.5 px-2.5 rounded-md text-sm active:bg-gray-300 hover:bg-gray-300 hover:cursor-pointer"
+                >
+                  View/Edit
+                </button>
+                <button
+                  onClick={() => onDelete(supp.id)}
+                  className="bg-red-500/50 text-gray-100 py-1.5 px-2.5 rounded-md text-sm active:bg-red-500 hover:bg-red-500 hover:cursor-pointer"
+                >
+                  Delete
+                </button>
+                <Link
+                  to={`/$tenant/supplier/history/$id`}
+                  params={{ tenant, id: supp.id }}
+                  search={{
+                    page: 1,
+                    limit: 25
+                  }}
+                  preload="intent"
+                  className="bg-green-300 py-1.5 px-2.5 rounded-md text-sm active:bg-green-500 hover:bg-gren-400 hover:cursor-pointer"
+                >
+                  History
+                </Link>
+              </div>
             </td>
           </tr>
         ))}

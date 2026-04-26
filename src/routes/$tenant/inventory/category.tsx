@@ -52,7 +52,7 @@ function CategoryComponent() {
 
   return (
     <main className="p-4 lg:p-8 min-h-screen">
-      <h1 className="text-xl lg:text-2xl text-center">Categories List</h1>
+      <h1 className="text-2xl lg:text-4xl font-bold text-center text-blue-500/70">Categories List</h1>
       <form onSubmit={handleSubmit} className="my-4 md:my-8 mx-auto">
         <div className="flex items-center justify-center gap-4">
           <div className="flex items-center gap-2">

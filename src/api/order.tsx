@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "~/lib/error";
+import { toApiError } from "~/lib/error";
 import type { OrderQuery, CreateOrderPayload, EditOrderPayload, DeleteOrderPayload } from "~/schema/order.schema";
 import type { Meta } from "~/lib/meta";
 
@@ -46,13 +46,6 @@ export type OrderDetailsReturn = {
     notes?: string;
     items: Order[];
   }
-};
-
-const toApiError = (error: any): ApiError => {
-  const message = error.data?.message || "Something went wrong";
-  const status = error.status;
-  const details = error.data?.details;
-  return new ApiError(message, status, details);
 };
 
 export const getOrdersTodays = async (params: OrderQuery) => {

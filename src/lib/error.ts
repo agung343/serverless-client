@@ -34,4 +34,11 @@ export class ApiError extends Error {
 
 export function isApiError(error: unknown): error is ApiError {
     return error instanceof ApiError;
-  }
+}
+
+export const toApiError = (error: any):ApiError => {
+    const message = error.data?.message || "Something went wrong"
+    const status = error.status || 500;
+    const detail = error.data?.details;
+    return new ApiError(message, status, detail)
+}

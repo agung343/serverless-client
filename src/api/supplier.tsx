@@ -1,5 +1,6 @@
 import { api } from "./client";
-import { ApiError } from "~/lib/error";
+import { toApiError } from "~/lib/error";
+import type { Purchase } from "./purchase";
 import type { Meta } from "~/lib/meta";
 import type {
   SupplierQuery,
@@ -22,24 +23,9 @@ export type SupplierReturn = {
 };
 
 export type SupplierHistoryReturn = {
-    purchases: {
-        id: string
-        supplier: string
-        invoice: string
-        date: string
-        totalAmount: string
-        paid: string
-        status: string
-    }[]
-    meta: Meta
+  purchases: Purchase[];
+  meta: Meta;
 }
-
-const toApiError = (error: any): ApiError => {
-  const message = error.data?.message || "Something went wrong";
-  const status = error.status;
-  const details = error.data?.details;
-  return new ApiError(message, status, details);
-};
 
 export const CreateSupplier = async (payload: CreateSupplierPayload) => {
   try {
@@ -84,7 +70,7 @@ export const getSupplierDetail = async (suppId: string) => {
     }
 }
 
-export const getSupplierHistory = async (suppId: string, params: SupplierHistoryQuery) => {
+export const getSupplierHistory = async (supplierId: string, params: SupplierHistoryQuery) => {
     const searchParams = new URLSearchParams();
     if (params.invoice) searchParams.set("name", params.invoice);
     if (params.page) searchParams.set("page", String(params.page));
@@ -93,7 +79,8 @@ export const getSupplierHistory = async (suppId: string, params: SupplierHistory
     if (params.endDate) searchParams.set("endDate", params.endDate)
         
     try {
-        const res = await api.get<SupplierHistoryReturn>(`supplier/history/${suppId}`)
+        const res = await api.get<SupplierHistoryReturn>(`supplier/history/${supplierId}?${searchParams.toString()}`)
+        console.log(res.data)
         return res.data
     } catch (error) {
         throw toApiError(error)        

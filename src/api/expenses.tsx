@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "../lib/error";
+import { toApiError } from "~/lib/error";
 import type { CreateNewExpenseOperationalPayload, ExpenseQuery } from "~/schema/expense.schema";
 
 export type OperationalExpense = {
@@ -21,13 +21,6 @@ export type OperationalExpenses = {
     hasPreviousPage: boolean;
   };
 };
-
-const toApiError = (error:any): ApiError => {
-  const message = error.data?.message || "Something went wrong";
-  const status = error.status;
-  const details = error.data?.details;
-  return new ApiError(message, status, details)
-}
 
 export const getOperationalExpenses = async (params: ExpenseQuery) => {
   const searchParams = new URLSearchParams();

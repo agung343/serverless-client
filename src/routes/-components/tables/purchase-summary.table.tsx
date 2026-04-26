@@ -1,33 +1,31 @@
 import { useNavigate } from "@tanstack/react-router";
-import { getOrderDetails, type Sale } from "~/api/order";
-import { orderKeys } from "~/queries/orderQueryOption";
+import { getPurchaseDetail, type Purchase } from "~/api/purchase";
+import { purchaseKeys } from "~/queries/purchaseQueryOptions";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import { formatRupiah } from "~/lib/rupiah_currency";
 import { dateTransaction } from "~/lib/date";
 
-interface SaleTableProps {
-  sales: Sale[];
+interface PurchaseProps {
+  purchases: Purchase[];
   onDetail: (id: string) => void;
-  onDelete?: (id: string) => void;
-  editable: boolean;
+  onArchieve?: (id: string) => void;
   tenant: string;
   isArchieve: boolean;
 }
 
-export default function SalesSummaryTable({
-  sales,
+export default function PurchaseSummaryTable({
+  purchases,
   onDetail,
-  onDelete,
-  editable,
+  onArchieve,
   tenant,
   isArchieve,
-}: SaleTableProps) {
+}: PurchaseProps) {
   const navigate = useNavigate();
   const prefetch = usePrefetch();
 
   return (
     <table className="border min-w-full border-blue-200 dark:text-stone-800">
-      <thead className="bg-gray-300 dark:bg-blue-400 font-semibold lg:text-lg sticky top-0 z-10">
+      <thead className="bg-gray-300 dark:bg-blue-400 font-semibold lg:text-xl sticky top-0 z-10">
         <tr>
           <th className="p-2 border dark:border-stone-100 font-semibold text-center">
             Invoice
@@ -36,66 +34,65 @@ export default function SalesSummaryTable({
             Date
           </th>
           <th className="p-2 border dark:border-stone-100 font-semibold text-center">
+            Supplier
+          </th>
+          <th className="p-2 border dark:border-stone-100 font-semibold text-center">
             Total
           </th>
           <th className="p-2 border dark:border-stone-100 font-semibold text-center">
-            Payment
+            Paid
           </th>
-          <th className="p-2 border dark:border-stone-100 font-semibold text-"></th>
+          <th className="p-2 border dark:border-stone-100 font-semibold text-center">
+            Status
+          </th>
+          <th className="p-2 border dark:border-stone-100"></th>
         </tr>
       </thead>
       <tbody>
-        {sales.map((item) => (
+        {purchases.map((purchase) => (
           <tr
-            key={item.id}
+            key={purchase.id}
             className="font-light text-sm lg:text-base odd:bg-gray-100 even:bg-gray-200"
           >
             <td className="p-2 border dark:border-stone-100 text-center">
-              {item.invoiceNumber}
+              {purchase.invoice}
             </td>
             <td className="p-2 border dark:border-stone-100 text-center">
-              {dateTransaction(new Date(item.date))}
+              {dateTransaction(new Date(purchase.date))}
+            </td>
+            <td className="p-2 border dark:border-stone-100 text-center">
+              {purchase.supplier}
             </td>
             <td className="p-2 border dark:border-stone-100 text-right">
-              {formatRupiah(Number(item.totalAmount))}
+              {formatRupiah(purchase.totalAmount)}
+            </td>
+            <td className="p-2 border dark:border-stone-100 text-right">
+              {formatRupiah(purchase.paid)}
             </td>
             <td className="p-2 border dark:border-stone-100 text-center">
-              {item.paymentType}
+              {purchase.status}
             </td>
             <td className="p-2 border dark:border-stone-100">
               <div className="flex items-center justify-center gap-2.5 lg:gap-4">
                 <button
-                  onClick={() => onDetail(item.id)}
-                  onMouseEnter={() =>
+                  onClick={() => onDetail(purchase.id)}
+                  onMouseEnter={() => {
                     prefetch([
                       {
-                        queryKey: orderKeys.detail(item.id),
-                        queryFn: () => getOrderDetails(item.id),
+                        queryKey: purchaseKeys.detail(purchase.id),
+                        queryFn: () => getPurchaseDetail(purchase.id),
                         staleTime: 1000 * 60 * 5,
                       },
-                    ])
-                  }
-                  className="py-1.5 px-2.5 rounded-md bg-gray-300 border border-gray-300/50"
+                    ]);
+                  }}
+                  className="py-1.5 px-2.5 rounded-md bg-gray-300 border border-gray-300/50 hover:cursor-pointer active:bg-gray-400"
                 >
                   Details
                 </button>
-                {editable && (
+                {!isArchieve && onArchieve && (
                   <button
-                    onClick={() =>
-                      navigate({
-                        to: "/$tenant/cashier/edit/$orderId",
-                        params: { tenant, orderId: item.id },
-                      })
-                    }
-                    className="py-1.5 px-2.5 rounded-md bg-yellow-300 text-stone-800/50"
-                  >
-                    Edit
-                  </button>
-                )}
-                {!isArchieve && onDelete && (
-                  <button
-                    onClick={() => onDelete(item.id)}
-                    className="py-1.5 px-2.5 rounded-md bg-red-500/50 text-white"
+                    onClick={() => onArchieve(purchase.id)}
+                    className="py-1.5 px-2.5 rounded-md bg-red-500/50 hover:bg-red-500 active:bg-red-500 text-white"
                   >
                     DELETE
                   </button>

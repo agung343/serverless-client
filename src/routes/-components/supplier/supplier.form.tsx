@@ -35,7 +35,7 @@ export default function SupplierForm({
   });
 
   function InvalidateAndClose() {
-    queryClient.invalidateQueries({ queryKey: [supplierKeys.all] });
+    queryClient.invalidateQueries({ queryKey: supplierKeys.all });
     onSuccess();
   }
 
@@ -52,6 +52,11 @@ export default function SupplierForm({
     onSuccess: () => {
       InvalidateAndClose();
     },
+    onError: (data:any) => {
+      if (data.message) {
+        alert(data.message)
+      }
+    }
   });
 
   if (mode === "edit" && isLoading) {
@@ -65,7 +70,6 @@ export default function SupplierForm({
   }
 
   const supplier = mode === "edit" && isSuccess ? data : undefined;
-  console.log(data)
   const isEdit = mode === "edit";
   const isPending = createMutation.isPending || updateMutation.isPending;
 

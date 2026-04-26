@@ -32,6 +32,11 @@ export default function AdjustForm({ productId, onSuccess }: Props) {
       queryClient.invalidateQueries({queryKey: productKeys.all});
       onSuccess();
     },
+    onError: (data:any) => {
+      if (data.message) {
+        alert(data.message)
+      }
+    }
   });
 
   function handleSubmit(e: React.SubmitEvent) {

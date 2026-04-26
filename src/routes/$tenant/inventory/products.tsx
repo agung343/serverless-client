@@ -90,7 +90,7 @@ function ProductsComponent() {
 
   return (
     <main className="p-4 lg:p-8 min-h-screen">
-      <h1 className="text-center text-xl lg:text-2xl font-bold my-3">
+      <h1 className="text-center text-2xl lg:text-4xl font-bold my-3 text-blue-500/70">
         Catalog Products
       </h1>
 

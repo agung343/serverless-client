@@ -15,7 +15,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
     name: "",
     productId: undefined as string | undefined,
     quantity: "1",
-    unitId: undefined as number | undefined,
+    unitId:  "",
     cost: "",
   });
 
@@ -36,7 +36,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
       name: "",
       productId: undefined,
       quantity: "1",
-      unitId: undefined,
+      unitId: "",
       cost: "",
     });
     setHighlightIndex(0);
@@ -50,7 +50,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
       productId: draft.productId,
       name: draft.name,
       quantity: Number(draft.quantity) || 1,
-      unitId: draft.unitId,
+      unitId: Number(draft.unitId),
       cost: Number(draft.cost) || 0,
     };
 
@@ -64,7 +64,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
       <h1 className="text-xl lg:text-2xl dark:text-neutral-800 text-neutral-100 font-bold">
         Select Product:
       </h1>
-      <div className="flex flex-col lg:flex-row lg:items-center gap-1.5">
+      <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 dark:text-stone-800">
         <label className="font-semibold w-20 lg:w-28 text-sm lg:text-base">
           Product:
         </label>
@@ -104,7 +104,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
                     name: selected.name,
                     productId: selected.id,
                     quantity: "1",
-                    unitId: undefined,
+                    unitId: "",
                     cost: String(selected.cost),
                   });
                 }
@@ -118,7 +118,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
 
           {/* Dropdown */}
           {showDrop && draft.name && (
-            <ul className="absolute w-full bg-white border mt-1 max-h-48 overflow-y-auto z-50">
+            <ul className="absolute w-full bg-white border mt-1 max-h-60 overflow-y-auto z-50">
               {filtered.map((item, index) => (
                 <li
                   key={item.id}
@@ -130,7 +130,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
                       name: item.name,
                       productId: item.id,
                       quantity: "1",
-                      unitId: undefined,
+                      unitId: "",
                       cost: String(item.cost),
                     });
                     setShowDrop(false);
@@ -211,7 +211,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
           name="unit"
           value={draft.unitId}
           onChange={(e) =>
-            setDraft((prev) => ({ ...prev, unitId: +e.target.value }))
+            setDraft((prev) => ({ ...prev, unitId: e.target.value }))
           }
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -219,7 +219,7 @@ export default function PurchaseProducts({ products, onAddItem }: Props) {
               handleSubmit();
             }
           }}
-          className="w-48 p-2 rounded-md bg-neutral-100 text-sm lg:text-base"
+          className="w-48 p-2 rounded-md bg-neutral-100 text-sm lg:text-base dark:text-stone-800"
         >
           <option value={""}>Select Unit</option>
           {UNITS.map((u) => (

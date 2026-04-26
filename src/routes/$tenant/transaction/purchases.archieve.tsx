@@ -1,72 +1,60 @@
 import { useState } from "react";
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getAllSalesOptions, orderKeys } from "~/queries/orderQueryOption";
-import { OrderQuerySchema } from "~/schema/order.schema";
-import { getAllSales } from "~/api/order";
+import {
+  purchasesArchieveOption,
+  purchaseKeys,
+} from "~/queries/purchaseQueryOptions";
+import { getPurchaseArchieve } from "~/api/purchase";
+import { PurchaseQuerySchema } from "~/schema/purchase.schema";
 import { useTableNavigation } from "~/hooks/useTableNavigation";
 import { usePrefetch } from "~/hooks/usePrefetch";
 import SearchInput from "~/routes/-components/ui/search-input";
 import DateRange from "~/routes/-components/ui/date-range";
 import LimitSelect from "~/routes/-components/ui/limit-select";
 import Pagination from "~/routes/-components/ui/pagination";
+import PurchaseSummaryTable from "~/routes/-components/tables/purchase-summary.table";
 import Modal from "~/routes/-components/modals";
-import SaleDetail from "~/routes/-components/modals/sale-detail";
-import DeleteSale from "~/routes/-components/modals/delete-sale";
-import SalesSummaryTable from "~/routes/-components/tables/sales-summary.table";
-import { formatRupiah } from "~/lib/rupiah_currency";
+import PurchaseDetail from "~/routes/-components/purchase/purchase-detail";
 
-type ModalType = "detail" | "edit" | "delete";
+export const Route = createFileRoute("/$tenant/transaction/purchases/archieve")(
+  {
+    validateSearch: PurchaseQuerySchema,
+    loaderDeps: ({ search }) => search,
+    loader: async ({ context: { queryClient }, deps }) => {
+      return queryClient.ensureQueryData(purchasesArchieveOption(deps));
+    },
+    component: PurchasesArchieve,
+  }
+);
 
-export const Route = createFileRoute("/$tenant/transaction/sales/")({
-  validateSearch: OrderQuerySchema,
-  loaderDeps: ({ search }) => search,
-  loader: async ({ context: { queryClient }, deps }) => {
-    return queryClient.ensureQueryData(getAllSalesOptions(deps));
-  },
-  component: SalesPage,
-});
-
-function SalesPage() {
+function PurchasesArchieve() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const [modalType, setModalType] = useState<ModalType | null>(null);
+  const [selectedPurchaseId, setSelectedPurchaseId] = useState<string | null>(
+    null
+  );
   const { tenant } = Route.useParams();
-  const query = useSearch({
-    from: "/$tenant/transaction/sales/",
-  });
+  const query = useSearch({ from: "/$tenant/transaction/purchases/archieve" });
   const prefetch = usePrefetch();
-
-  const { data } = useSuspenseQuery(getAllSalesOptions(query));
-
-  // const { sales, meta } = data;
-  const sales = data.sales || []
-  const netSales = sales.reduce((sum, item) => sum + Number(item.totalAmount), 0)
-
-  const meta = data.meta;
 
   const { setSearch, setPage, setLimit, setDateRange } = useTableNavigation(
     Route.fullPath
   );
 
+  const { data } = useSuspenseQuery(purchasesArchieveOption(query));
+  const purchases = data.purchases || [];
+  const meta = data.meta;
+
   function closeModal() {
     setIsOpen(false);
-    setModalType(null);
-    setSelectedOrderId(null);
+    setSelectedPurchaseId(null);
   }
 
   function openDetail(orderId: string) {
     setIsOpen(true);
-    setModalType("detail");
-    setSelectedOrderId(orderId);
+    setSelectedPurchaseId(orderId);
   }
 
-  function openDelete(orderId: string) {
-    setIsOpen(true);
-    setModalType("delete");
-    setSelectedOrderId(orderId);
-  }
-  
   const QueryInputs = (
     <div className="flex items-center justify-between text-sm lg:text-base mb-4 md:mb-6">
       <SearchInput
@@ -83,55 +71,51 @@ function SalesPage() {
     </div>
   );
 
-  if (sales.length === 0) {
+  if (purchases.length === 0) {
     return (
       <main className="p-4 lg:p-8 min-h-screen">
         <div className="flex justify-center my-4">
           <h1 className="text-2xl lg:text-4xl font-bold text-red-500/50">
-            No sales recorded yet!.
+            No Purchases Archieve!
           </h1>
         </div>
         {QueryInputs}
-        <div className="my-4 flex justify-end">
+        <div className="my-4 flex">
           <Link
-            to="/$tenant/transaction/sales/archieve"
+            to="/$tenant/transaction/purchases"
             params={{ tenant }}
-            className="text-red-500 font-semibold py-2 px-4 border rounded-md border-red-500 bg-transparent cursor-pointer active:bg-red-500/50"
+            className="text-green-500 font-semibold py-2 px-4 border rounded-md border-green-500 bg-transparent cursor-pointer active:bg-green-500/50"
           >
-            Achieve
+            Back to Purchases
           </Link>
         </div>
       </main>
     );
   }
 
-
   return (
     <main className="p-4 lg:p-8 min-h-screen">
       <div className="flex justify-center my-4">
-        <h1 className="text-2xl: lg:text-4xl font-bold text-green-500/70 dark:text-green-300">
-          Sales
+        <h1 className="text-2xl: lg:text-4xl font-bold text-red-500/50 dark:text-stone-200">
+          Purchases
         </h1>
       </div>
       {QueryInputs}
-      <div className="my-4 flex items-center justify-between">
-        <h2 className="text-lg lg:text-2xl text-green-500/70">Net Sales: <span className="font-semibold">{formatRupiah(netSales)}</span></h2>
+      <div className="my-4 flex justify-end">
         <Link
-          to="/$tenant/transaction/sales/archieve"
+          to="/$tenant/transaction/purchases"
           params={{ tenant }}
-          className="text-red-500 font-semibold py-2 px-4 border rounded-md border-red-500 bg-transparent cursor-pointer active:bg-red-500/50"
+          className="text-green-500 font-semibold py-2 px-4 border rounded-md border-green-500 bg-transparent cursor-pointer active:bg-green-500/50"
         >
-          Achieve
+          Back to Purchases
         </Link>
       </div>
       <div className="overflow-auto max-h-150 mt-4 md:mt-6">
-        <SalesSummaryTable
-          sales={sales}
+        <PurchaseSummaryTable
+          purchases={purchases}
           onDetail={openDetail}
-          onDelete={openDelete}
-          editable={false}
           tenant={tenant}
-          isArchieve={false}
+          isArchieve={true}
         />
       </div>
       <Pagination
@@ -143,12 +127,12 @@ function SalesPage() {
         onNextPrefetch={() => {
           prefetch([
             {
-              queryKey: orderKeys.sales({
+              queryKey: purchaseKeys.archieve({
                 ...query,
                 page: query.page + 1,
               }),
               queryFn: () =>
-                getAllSales({
+                getPurchaseArchieve({
                   ...query,
                   page: query.page + 1,
                 }),
@@ -159,12 +143,12 @@ function SalesPage() {
         onPrevPrefetch={() => {
           prefetch([
             {
-              queryKey: orderKeys.sales({
+              queryKey: purchaseKeys.archieve({
                 ...query,
                 page: query.page - 1,
               }),
               queryFn: () =>
-                getAllSales({
+                getPurchaseArchieve({
                   ...query,
                   page: query.page - 1,
                 }),
@@ -174,15 +158,9 @@ function SalesPage() {
         }}
       />
 
-      {isOpen && modalType === "detail" && selectedOrderId && (
+      {isOpen && selectedPurchaseId && (
         <Modal open={isOpen} onClose={closeModal}>
-          <SaleDetail orderId={selectedOrderId} />
-        </Modal>
-      )}
-
-      {isOpen && modalType === "delete" && selectedOrderId && (
-        <Modal open={isOpen} onClose={closeModal}>
-          <DeleteSale orderId={selectedOrderId} onSuccess={closeModal} />
+          <PurchaseDetail purchaseId={selectedPurchaseId!} />
         </Modal>
       )}
     </main>

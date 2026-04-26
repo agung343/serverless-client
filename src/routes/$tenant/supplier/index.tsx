@@ -15,7 +15,7 @@ import LimitSelect from "~/routes/-components/ui/limit-select";
 import SuppliersTable from "~/routes/-components/supplier/supplier-table";
 import Pagination from "~/routes/-components/ui/pagination";
 import Modal from "~/routes/-components/modals";
-import SupplierForm from "~/routes/-components/forms/supplier.form";
+import SupplierForm from "~/routes/-components/supplier/supplier.form";
 
 type ModalType = "new" | "edit" | "delete";
 
@@ -29,6 +29,8 @@ export const Route = createFileRoute("/$tenant/supplier/")({
 });
 
 function SuppliersPage() {
+  const params = Route.useParams()
+  const {tenant} = params
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSupplierId, setSelectedSupplierId] = useState<string | null>(
     null
@@ -92,6 +94,7 @@ function SuppliersPage() {
           suppliers={suppliers}
           onEdit={(id) => openEdit(id)}
           onDelete={(id) => openDelete(id)}
+          tenant={tenant}
         />
       </div>
       <Pagination

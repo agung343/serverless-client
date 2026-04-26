@@ -1,29 +1,30 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { archievePurchase } from "~/api/purchase";
 import {
-  DeleteOrderSchema,
-  type DeleteOrderPayload,
-} from "~/schema/order.schema";
-import { archieveSale } from "~/api/order";
-import { orderKeys } from "~/queries/orderQueryOption";
+  ArchievePurchaseSchema,
+  type ArchievePurchasePayload,
+} from "~/schema/purchase.schema";
+import { purchaseKeys } from "~/queries/purchaseQueryOptions";
 
-interface DeleteSaleProps {
-  orderId: string;
+interface DeletePurchaseProps {
+  purchaseId: string;
   onSuccess: () => void;
 }
 
-export default function DeleteSale({
-  orderId,
+export default function DeletePurchase({
+  purchaseId,
   onSuccess,
-}: DeleteSaleProps) {
-  const [fieldErrors, setFieldError] = useState<Record<string, string[]>>({});
+}: DeletePurchaseProps) {
+  const [fieldError, setFieldError] = useState<Record<string, string[]>>({});
   const queryClient = useQueryClient();
 
   const archieveMutation = useMutation({
-    mutationFn: (payload: DeleteOrderPayload) => archieveSale(orderId, payload),
+    mutationFn: (payload: ArchievePurchasePayload) =>
+      archievePurchase(purchaseId, payload),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: orderKeys.all });
+      queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
       alert(data.message);
       onSuccess();
     },
@@ -38,7 +39,7 @@ export default function DeleteSale({
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const result = DeleteOrderSchema.safeParse({
+    const result = ArchievePurchaseSchema.safeParse({
       notes: formData.get("notes"),
     });
     if (!result.success) {
@@ -46,23 +47,21 @@ export default function DeleteSale({
       setFieldError(flatten.fieldErrors);
       return;
     }
-    setFieldError({});
     const payload = result.data;
+    setFieldError({});
     archieveMutation.mutate(payload);
   }
 
   return (
     <main className="min-w-md p-2.5 lg:p-4 dark:text-stone-800">
-      <h2 className="text-xl lg:text-2xl text-center">
-        Delete Sale
-      </h2>
+      <h2 className="text-xl lg:text-2xl text-center">Delete Purchase</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="notes">Notes
-            {" "}
-            {fieldErrors.notes ? (
+          <label htmlFor="notes">
+            Notes{" "}
+            {fieldError.notes ? (
               <span className="text-sm font-light text-red-500">
-                {fieldErrors.notes[0]}
+                {fieldError.notes[0]}
               </span>
             ) : (
               <span className="text-sm font-light text-red-500/50">

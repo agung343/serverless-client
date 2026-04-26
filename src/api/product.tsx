@@ -1,5 +1,5 @@
 import { api } from "./client";
-import { ApiError } from "../lib/error";
+import { toApiError } from "~/lib/error";
 import type { CreateProductPayload, UpdateProductPayload, ProductQuery, ProductCashierQuery } from "../schema/product.schema";
 
 export type Product = {
@@ -46,13 +46,6 @@ export type ProductReturn = {
     price: number
     cost: number
     description?: string    
-}
-
-const toApiError = (error:any): ApiError => {
-    const message = error.data?.message || "Something went wrong";
-    const status = error.status;
-    const details = error.data?.details;
-    return new ApiError(message, status, details)
 }
 
 export const getAllProducts = async (params: ProductQuery) => {
