@@ -16,11 +16,15 @@ import { Route as LoginTenantRouteImport } from './routes/login.$tenant'
 import { Route as staticServicesRouteImport } from './routes/(static)/services'
 import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
 import { Route as TenantTransactionRouteRouteImport } from './routes/$tenant/transaction/route'
+import { Route as TenantReportRouteRouteImport } from './routes/$tenant/report/route'
 import { Route as TenantInventoryRouteRouteImport } from './routes/$tenant/inventory/route'
 import { Route as TenantExpensesRouteRouteImport } from './routes/$tenant/expenses/route'
 import { Route as TenantCashierRouteRouteImport } from './routes/$tenant/cashier/route'
 import { Route as TenantSupplierIndexRouteImport } from './routes/$tenant/supplier/index'
+import { Route as TenantReportIndexRouteImport } from './routes/$tenant/report/index'
 import { Route as TenantCashierIndexRouteImport } from './routes/$tenant/cashier/index'
+import { Route as TenantReportSalesRouteImport } from './routes/$tenant/report/sales'
+import { Route as TenantReportPurchasesRouteImport } from './routes/$tenant/report/purchases'
 import { Route as TenantInventoryStockRouteImport } from './routes/$tenant/inventory/stock'
 import { Route as TenantInventoryProductsRouteImport } from './routes/$tenant/inventory/products'
 import { Route as TenantInventoryCreateProductRouteImport } from './routes/$tenant/inventory/create-product'
@@ -69,6 +73,11 @@ const TenantTransactionRouteRoute = TenantTransactionRouteRouteImport.update({
   path: '/transaction',
   getParentRoute: () => TenantRouteRoute,
 } as any)
+const TenantReportRouteRoute = TenantReportRouteRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => TenantRouteRoute,
+} as any)
 const TenantInventoryRouteRoute = TenantInventoryRouteRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -89,10 +98,25 @@ const TenantSupplierIndexRoute = TenantSupplierIndexRouteImport.update({
   path: '/supplier/',
   getParentRoute: () => TenantRouteRoute,
 } as any)
+const TenantReportIndexRoute = TenantReportIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TenantReportRouteRoute,
+} as any)
 const TenantCashierIndexRoute = TenantCashierIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TenantCashierRouteRoute,
+} as any)
+const TenantReportSalesRoute = TenantReportSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => TenantReportRouteRoute,
+} as any)
+const TenantReportPurchasesRoute = TenantReportPurchasesRouteImport.update({
+  id: '/purchases',
+  path: '/purchases',
+  getParentRoute: () => TenantReportRouteRoute,
 } as any)
 const TenantInventoryStockRoute = TenantInventoryStockRouteImport.update({
   id: '/stock',
@@ -172,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/$tenant/cashier': typeof TenantCashierRouteRouteWithChildren
   '/$tenant/expenses': typeof TenantExpensesRouteRouteWithChildren
   '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
+  '/$tenant/report': typeof TenantReportRouteRouteWithChildren
   '/$tenant/transaction': typeof TenantTransactionRouteRouteWithChildren
   '/$tenant/admin': typeof TenantAdminRoute
   '/services': typeof staticServicesRoute
@@ -184,7 +209,10 @@ export interface FileRoutesByFullPath {
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
   '/$tenant/inventory/stock': typeof TenantInventoryStockRoute
+  '/$tenant/report/purchases': typeof TenantReportPurchasesRoute
+  '/$tenant/report/sales': typeof TenantReportSalesRoute
   '/$tenant/cashier/': typeof TenantCashierIndexRoute
+  '/$tenant/report/': typeof TenantReportIndexRoute
   '/$tenant/supplier/': typeof TenantSupplierIndexRoute
   '/$tenant/cashier/edit/$orderId': typeof TenantCashierEditOrderIdRoute
   '/$tenant/supplier/history/$id': typeof TenantSupplierHistoryIdRoute
@@ -209,7 +237,10 @@ export interface FileRoutesByTo {
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
   '/$tenant/inventory/stock': typeof TenantInventoryStockRoute
+  '/$tenant/report/purchases': typeof TenantReportPurchasesRoute
+  '/$tenant/report/sales': typeof TenantReportSalesRoute
   '/$tenant/cashier': typeof TenantCashierIndexRoute
+  '/$tenant/report': typeof TenantReportIndexRoute
   '/$tenant/supplier': typeof TenantSupplierIndexRoute
   '/$tenant/cashier/edit/$orderId': typeof TenantCashierEditOrderIdRoute
   '/$tenant/supplier/history/$id': typeof TenantSupplierHistoryIdRoute
@@ -225,6 +256,7 @@ export interface FileRoutesById {
   '/$tenant/cashier': typeof TenantCashierRouteRouteWithChildren
   '/$tenant/expenses': typeof TenantExpensesRouteRouteWithChildren
   '/$tenant/inventory': typeof TenantInventoryRouteRouteWithChildren
+  '/$tenant/report': typeof TenantReportRouteRouteWithChildren
   '/$tenant/transaction': typeof TenantTransactionRouteRouteWithChildren
   '/$tenant/admin': typeof TenantAdminRoute
   '/(static)/services': typeof staticServicesRoute
@@ -237,7 +269,10 @@ export interface FileRoutesById {
   '/$tenant/inventory/create-product': typeof TenantInventoryCreateProductRoute
   '/$tenant/inventory/products': typeof TenantInventoryProductsRoute
   '/$tenant/inventory/stock': typeof TenantInventoryStockRoute
+  '/$tenant/report/purchases': typeof TenantReportPurchasesRoute
+  '/$tenant/report/sales': typeof TenantReportSalesRoute
   '/$tenant/cashier/': typeof TenantCashierIndexRoute
+  '/$tenant/report/': typeof TenantReportIndexRoute
   '/$tenant/supplier/': typeof TenantSupplierIndexRoute
   '/$tenant/cashier/edit/$orderId': typeof TenantCashierEditOrderIdRoute
   '/$tenant/supplier/history/$id': typeof TenantSupplierHistoryIdRoute
@@ -253,6 +288,7 @@ export interface FileRouteTypes {
     | '/$tenant/cashier'
     | '/$tenant/expenses'
     | '/$tenant/inventory'
+    | '/$tenant/report'
     | '/$tenant/transaction'
     | '/$tenant/admin'
     | '/services'
@@ -265,7 +301,10 @@ export interface FileRouteTypes {
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
     | '/$tenant/inventory/stock'
+    | '/$tenant/report/purchases'
+    | '/$tenant/report/sales'
     | '/$tenant/cashier/'
+    | '/$tenant/report/'
     | '/$tenant/supplier/'
     | '/$tenant/cashier/edit/$orderId'
     | '/$tenant/supplier/history/$id'
@@ -290,7 +329,10 @@ export interface FileRouteTypes {
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
     | '/$tenant/inventory/stock'
+    | '/$tenant/report/purchases'
+    | '/$tenant/report/sales'
     | '/$tenant/cashier'
+    | '/$tenant/report'
     | '/$tenant/supplier'
     | '/$tenant/cashier/edit/$orderId'
     | '/$tenant/supplier/history/$id'
@@ -305,6 +347,7 @@ export interface FileRouteTypes {
     | '/$tenant/cashier'
     | '/$tenant/expenses'
     | '/$tenant/inventory'
+    | '/$tenant/report'
     | '/$tenant/transaction'
     | '/$tenant/admin'
     | '/(static)/services'
@@ -317,7 +360,10 @@ export interface FileRouteTypes {
     | '/$tenant/inventory/create-product'
     | '/$tenant/inventory/products'
     | '/$tenant/inventory/stock'
+    | '/$tenant/report/purchases'
+    | '/$tenant/report/sales'
     | '/$tenant/cashier/'
+    | '/$tenant/report/'
     | '/$tenant/supplier/'
     | '/$tenant/cashier/edit/$orderId'
     | '/$tenant/supplier/history/$id'
@@ -384,6 +430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantTransactionRouteRouteImport
       parentRoute: typeof TenantRouteRoute
     }
+    '/$tenant/report': {
+      id: '/$tenant/report'
+      path: '/report'
+      fullPath: '/$tenant/report'
+      preLoaderRoute: typeof TenantReportRouteRouteImport
+      parentRoute: typeof TenantRouteRoute
+    }
     '/$tenant/inventory': {
       id: '/$tenant/inventory'
       path: '/inventory'
@@ -412,12 +465,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantSupplierIndexRouteImport
       parentRoute: typeof TenantRouteRoute
     }
+    '/$tenant/report/': {
+      id: '/$tenant/report/'
+      path: '/'
+      fullPath: '/$tenant/report/'
+      preLoaderRoute: typeof TenantReportIndexRouteImport
+      parentRoute: typeof TenantReportRouteRoute
+    }
     '/$tenant/cashier/': {
       id: '/$tenant/cashier/'
       path: '/'
       fullPath: '/$tenant/cashier/'
       preLoaderRoute: typeof TenantCashierIndexRouteImport
       parentRoute: typeof TenantCashierRouteRoute
+    }
+    '/$tenant/report/sales': {
+      id: '/$tenant/report/sales'
+      path: '/sales'
+      fullPath: '/$tenant/report/sales'
+      preLoaderRoute: typeof TenantReportSalesRouteImport
+      parentRoute: typeof TenantReportRouteRoute
+    }
+    '/$tenant/report/purchases': {
+      id: '/$tenant/report/purchases'
+      path: '/purchases'
+      fullPath: '/$tenant/report/purchases'
+      preLoaderRoute: typeof TenantReportPurchasesRouteImport
+      parentRoute: typeof TenantReportRouteRoute
     }
     '/$tenant/inventory/stock': {
       id: '/$tenant/inventory/stock'
@@ -558,6 +632,21 @@ const TenantInventoryRouteRouteChildren: TenantInventoryRouteRouteChildren = {
 const TenantInventoryRouteRouteWithChildren =
   TenantInventoryRouteRoute._addFileChildren(TenantInventoryRouteRouteChildren)
 
+interface TenantReportRouteRouteChildren {
+  TenantReportPurchasesRoute: typeof TenantReportPurchasesRoute
+  TenantReportSalesRoute: typeof TenantReportSalesRoute
+  TenantReportIndexRoute: typeof TenantReportIndexRoute
+}
+
+const TenantReportRouteRouteChildren: TenantReportRouteRouteChildren = {
+  TenantReportPurchasesRoute: TenantReportPurchasesRoute,
+  TenantReportSalesRoute: TenantReportSalesRoute,
+  TenantReportIndexRoute: TenantReportIndexRoute,
+}
+
+const TenantReportRouteRouteWithChildren =
+  TenantReportRouteRoute._addFileChildren(TenantReportRouteRouteChildren)
+
 interface TenantTransactionRouteRouteChildren {
   TenantTransactionPurchasesArchieveRoute: typeof TenantTransactionPurchasesArchieveRoute
   TenantTransactionSalesArchieveRoute: typeof TenantTransactionSalesArchieveRoute
@@ -583,6 +672,7 @@ interface TenantRouteRouteChildren {
   TenantCashierRouteRoute: typeof TenantCashierRouteRouteWithChildren
   TenantExpensesRouteRoute: typeof TenantExpensesRouteRouteWithChildren
   TenantInventoryRouteRoute: typeof TenantInventoryRouteRouteWithChildren
+  TenantReportRouteRoute: typeof TenantReportRouteRouteWithChildren
   TenantTransactionRouteRoute: typeof TenantTransactionRouteRouteWithChildren
   TenantAdminRoute: typeof TenantAdminRoute
   TenantSupplierIndexRoute: typeof TenantSupplierIndexRoute
@@ -593,6 +683,7 @@ const TenantRouteRouteChildren: TenantRouteRouteChildren = {
   TenantCashierRouteRoute: TenantCashierRouteRouteWithChildren,
   TenantExpensesRouteRoute: TenantExpensesRouteRouteWithChildren,
   TenantInventoryRouteRoute: TenantInventoryRouteRouteWithChildren,
+  TenantReportRouteRoute: TenantReportRouteRouteWithChildren,
   TenantTransactionRouteRoute: TenantTransactionRouteRouteWithChildren,
   TenantAdminRoute: TenantAdminRoute,
   TenantSupplierIndexRoute: TenantSupplierIndexRoute,

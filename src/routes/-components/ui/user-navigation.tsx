@@ -30,7 +30,7 @@ export default function UserNavigation({
     <header className="p-4 lg:p-6 h-12 lg:h-16 sticky left-0 top-0 z-50 bg-zinc-100 lg:text-lg flex items-center justify-between">
       <div className="flex items-center gap-2 lg:gap-4 dark:text-stone-800">
         <h1 className="lg:text-xl text-stone-800">POS & INVENTORY</h1>
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-4">
           <Link
             to={`/$tenant/cashier`}
             params={{ tenant }}
@@ -62,7 +62,7 @@ export default function UserNavigation({
             label="Transaction"
             items={[
               { label: "Sales", to: `/${tenant}/transaction/sales` },
-              { label: "Purchases", to:`/${tenant}/transaction/purchases/`}
+              { label: "Purchases", to: `/${tenant}/transaction/purchases/` },
             ]}
           />
           <Link
@@ -72,6 +72,14 @@ export default function UserNavigation({
             activeProps={{ className: "!font-bold underline text-blue-500/50" }}
           >
             Supplier
+          </Link>
+          <Link
+            to={"/$tenant/report"}
+            params={{ tenant }}
+            className="font-light text-sm lg:text-base"
+            activeProps={{ className: "!font-bold underline text-blue-500/50" }}
+          >
+            Report
           </Link>
           {isAdmin && (
             <Link

@@ -30,7 +30,7 @@ export default function NavDropDown({
     <div className="relative" ref={ref}>
       <button
         type="button"
-        className="flex items-center gap-2 px-4 py-2 z-50 font-light text-sm lg:text-base"
+        className="flex items-center gap-2 px-2 py-1 z-50 font-light text-sm lg:text-base"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         {label}

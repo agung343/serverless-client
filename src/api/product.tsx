@@ -48,7 +48,7 @@ export type ProductReturn = {
     description?: string    
 }
 
-export const getAllProducts = async (params: ProductQuery) => {
+export const getAllProducts = async (params: ProductQuery = {page: 1, limit: 25}) => {
     const searchParams = new URLSearchParams()
     if (params.search) searchParams.set("search", params.search)
     if (params.page !== undefined) searchParams.set("page", String(params.page))
