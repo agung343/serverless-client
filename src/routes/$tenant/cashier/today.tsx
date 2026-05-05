@@ -126,6 +126,7 @@ function CashierToday() {
           onDelete={openDelete}
           editable={true}
           tenant={tenant}
+          isArchieve={false}
         />
       </div>
       <Pagination
